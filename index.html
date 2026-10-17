@@ -1,0 +1,871 @@
+<!DOCTYPE html>
+<html lang="es" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0" />
+  <title>LanzaWebs — Agencia de Diseño Web en General Villegas</title>
+  <meta name="description" content="Somos LanzaWebs, agencia de diseño web en General Villegas. Sitios web a medida para consultorios, barberías y negocios." />
+
+  <!-- Google Fonts: Cormorant Garamond & Plus Jakarta Sans -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,600;0,700;1,600&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <style>
+    :root {
+      --bg-black: #000000;
+      --card-dark: #121214;
+      --text-white: #f5f5f7;
+      --text-gray: #86868b;
+      --apple-yellow: #ffd60a;
+      --accent-green: #22c55e;
+      --sf-display: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Plus Jakarta Sans", sans-serif;
+      --sf-text: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Plus Jakarta Sans", sans-serif;
+      --serif-title: 'Cormorant Garamond', Georgia, serif;
+      --sans-clean: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      background-color: var(--bg-black);
+      color: var(--text-white);
+      font-family: var(--sans-clean);
+      margin: 0;
+      padding: 0;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* Tipografías específicas */
+    .font-serif-luxury {
+      font-family: var(--serif-title);
+    }
+    .font-sf-display {
+      font-family: var(--sf-display);
+      letter-spacing: -0.025em;
+    }
+    .font-sf-text {
+      font-family: var(--sf-text);
+      letter-spacing: -0.01em;
+    }
+
+    /* Estilo Visual Video 1: "Diseño web" con partículas y esfera 3D */
+    .hero-visual-stage {
+      position: relative;
+      width: 100%;
+      height: 230px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      margin: 0 auto;
+    }
+
+    @media (min-width: 640px) {
+      .hero-visual-stage {
+        height: 290px;
+      }
+    }
+
+    .hero-green-glow {
+      position: absolute;
+      width: 320px;
+      height: 190px;
+      background: radial-gradient(ellipse at center, rgba(16, 185, 129, 0.24) 0%, rgba(6, 78, 59, 0.12) 45%, rgba(0, 0, 0, 0) 75%);
+      filter: blur(22px);
+      z-index: 1;
+      pointer-events: none;
+    }
+
+    #particlesCanvas {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 2;
+      pointer-events: none;
+    }
+
+    .hero-diseno-title {
+      position: relative;
+      z-index: 3;
+      font-family: var(--serif-title);
+      font-weight: 700;
+      font-size: clamp(3.5rem, 15vw, 6.2rem);
+      line-height: 0.95;
+      letter-spacing: -0.03em;
+      background: linear-gradient(180deg, #ffffff 0%, #f3f4f6 55%, #a1a1aa 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      text-shadow: 0 12px 35px rgba(0, 0, 0, 0.85);
+      user-select: none;
+      padding: 0 12px;
+    }
+
+    /* Esfera 3D texturizada debajo de la "ñ / o" */
+    .sphere-3d {
+      position: absolute;
+      z-index: 4;
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      left: 52%;
+      bottom: 24%;
+      transform: translate(-50%, 42%);
+      background:
+        radial-gradient(circle at 30% 28%, rgba(255,255,255,0.95) 0%, rgba(210,210,215,0.85) 22%, rgba(90,90,98,0.9) 58%, #09090b 92%),
+        radial-gradient(circle at 65% 35%, #111 4px, transparent 5px),
+        radial-gradient(circle at 35% 65%, #111 5px, transparent 6px),
+        radial-gradient(circle at 70% 70%, #18181b 4px, transparent 5px),
+        radial-gradient(circle at 25% 30%, #27272a 3px, transparent 4px);
+      background-blend-mode: normal, multiply, multiply, multiply, multiply;
+      box-shadow:
+        -4px -4px 12px rgba(255, 255, 255, 0.25) inset,
+        6px 8px 16px rgba(0, 0, 0, 0.9),
+        0 0 20px rgba(0, 0, 0, 0.8);
+      animation: floatSphere 5s ease-in-out infinite;
+    }
+
+    .sphere-3d::after {
+      content: "";
+      position: absolute;
+      inset: 2px;
+      border-radius: 50%;
+      background-image:
+        radial-gradient(#09090b 18%, transparent 20%),
+        radial-gradient(#18181b 16%, transparent 18%);
+      background-position: 0 0, 7px 7px;
+      background-size: 14px 14px;
+      opacity: 0.55;
+      mix-blend-mode: overlay;
+    }
+
+    @keyframes floatSphere {
+      0%, 100% { transform: translate(-50%, 42%) rotate(0deg); }
+      50% { transform: translate(-50%, 34%) rotate(12deg); }
+    }
+
+    /* Deslizador de 3 Imágenes Superpuestas a 0° (Rectas) */
+    .cards-stage {
+      position: relative;
+      width: 100%;
+      max-width: 430px;
+      height: 360px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      touch-action: pan-y;
+    }
+
+    .slide-card {
+      position: absolute;
+      width: 215px;
+      height: 325px;
+      border-radius: 22px;
+      overflow: hidden;
+      background: #18181b;
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.88);
+      transition: all 0.55s cubic-bezier(0.22, 1, 0.36, 1);
+      cursor: pointer;
+      user-select: none;
+    }
+
+    @media (min-width: 640px) {
+      .cards-stage {
+        max-width: 520px;
+        height: 410px;
+      }
+      .slide-card {
+        width: 245px;
+        height: 370px;
+      }
+    }
+
+    .slide-card img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      pointer-events: none;
+    }
+
+    /* Posiciones rectas a 0 grados sin rotación */
+    .slide-card.pos-center {
+      transform: translate3d(0, 0, 0) scale(1) rotate(0deg);
+      z-index: 30;
+      opacity: 1;
+      filter: brightness(1);
+      border-color: rgba(255, 255, 255, 0.28);
+    }
+
+    .slide-card.pos-left {
+      transform: translate3d(-82px, 0, 0) scale(0.88) rotate(0deg);
+      z-index: 20;
+      opacity: 0.65;
+      filter: brightness(0.68);
+    }
+
+    .slide-card.pos-right {
+      transform: translate3d(82px, 0, 0) scale(0.88) rotate(0deg);
+      z-index: 20;
+      opacity: 0.65;
+      filter: brightness(0.68);
+    }
+
+    @media (min-width: 640px) {
+      .slide-card.pos-left {
+        transform: translate3d(-110px, 0, 0) scale(0.88) rotate(0deg);
+      }
+      .slide-card.pos-right {
+        transform: translate3d(110px, 0, 0) scale(0.88) rotate(0deg);
+      }
+    }
+
+    /* Animación Scroll Reveal (como en el Video 2) */
+    .reveal-on-scroll {
+      opacity: 0;
+      transform: translateY(30px);
+      filter: blur(4px);
+      transition: opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1),
+                  transform 0.7s cubic-bezier(0.22, 1, 0.36, 1),
+                  filter 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+      will-change: opacity, transform, filter;
+    }
+
+    .reveal-on-scroll.is-visible {
+      opacity: 1;
+      transform: translateY(0);
+      filter: blur(0);
+    }
+
+    /* Isla estilo Apple (Foto 4) */
+    .apple-island {
+      position: relative;
+      display: inline-grid;
+      grid-template-columns: repeat(3, 1fr);
+      background-color: #262629;
+      padding: 5px;
+      border-radius: 9999px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      width: 100%;
+      max-width: 390px;
+    }
+
+    .island-pill-bg {
+      position: absolute;
+      top: 5px;
+      bottom: 5px;
+      left: 5px;
+      width: calc((100% - 10px) / 3);
+      background-color: #000000;
+      border-radius: 9999px;
+      transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+      z-index: 1;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.6);
+    }
+
+    .island-btn {
+      position: relative;
+      z-index: 2;
+      padding: 10px 8px;
+      font-size: 0.73rem;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      text-align: center;
+      color: #d1d1d6;
+      transition: color 0.3s ease;
+      cursor: pointer;
+      user-select: none;
+      white-space: nowrap;
+    }
+
+    .island-btn.active {
+      color: var(--apple-yellow);
+    }
+
+    /* Tarjeta Carrusel estilo Foto 3 */
+    .apple-feature-card {
+      background: linear-gradient(180deg, #141416 0%, #0d0d0f 100%);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 32px;
+      padding: 34px 26px;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.85);
+    }
+  </style>
+</head>
+<body class="bg-black text-[#f5f5f7] selection:bg-emerald-500 selection:text-black">
+
+  <!-- Barra de Navegación Minimalista Estilo Apple -->
+  <header class="sticky top-0 z-50 backdrop-blur-xl bg-black/80 border-b border-white/[0.07]">
+    <div class="max-w-5xl mx-auto px-5 h-14 flex items-center justify-between">
+      <a href="#" class="flex items-center gap-2 group">
+        <span class="font-semibold tracking-tight text-base text-white">LanzaWebs</span>
+        <span class="text-[10px] uppercase tracking-widest px-2 py-0.5 rounded-full bg-white/10 text-zinc-300">Villegas</span>
+      </a>
+
+      <nav class="hidden sm:flex items-center gap-6 text-xs text-zinc-400">
+        <a href="#beneficios" class="hover:text-white transition">Beneficios</a>
+        <a href="#seguridad" class="hover:text-white transition">Seguridad</a>
+        <a href="#dominio" class="hover:text-white transition">Dominio</a>
+        <a href="#sectores" class="hover:text-white transition">Sectores</a>
+      </nav>
+
+      <a href="#sectores" class="text-xs font-medium bg-white text-black px-3.5 py-1.5 rounded-full hover:bg-zinc-200 transition">
+        Explorar
+      </a>
+    </div>
+  </header>
+
+  <!-- SECCIÓN 1: INGRESO PRINCIPAL (Estilo Video 1 + Deslizador 3 Imágenes) -->
+  <main class="max-w-xl mx-auto px-6 pt-4 pb-16">
+
+    <!-- Bloque Visual "Diseño web" con Partículas y Esfera 3D -->
+    <div class="hero-visual-stage reveal-on-scroll is-visible">
+      <div class="hero-green-glow"></div>
+      <canvas id="particlesCanvas"></canvas>
+      <h1 class="hero-diseno-title">Diseño web</h1>
+      <div class="sphere-3d" aria-hidden="true"></div>
+    </div>
+
+    <!-- Subtítulo de Presentación LanzaWebs -->
+    <div class="mt-2 text-left space-y-2.5 reveal-on-scroll is-visible">
+      <p class="text-[#86868b] text-[15px] sm:text-[17px] leading-relaxed font-normal">
+        Somos <strong class="text-white font-semibold">LanzaWebs.</strong> una agencia de diseño web ubicada en General Villegas.
+      </p>
+      <p class="text-[#86868b] text-[15px] sm:text-[17px] leading-relaxed font-normal">
+        Sitios Webs a medida, enfocadas en <strong class="text-white font-semibold">consultorios, barberias, y todo tipo de negocios</strong> que buscan dar un salto y impulsar su visibilidad en la zona.
+      </p>
+    </div>
+
+    <!-- Deslizador Central de 3 Imágenes a 0° (Rectas) -->
+    <section class="mt-10 mb-8 reveal-on-scroll" aria-label="Galería de proyectos">
+      <div class="cards-stage" id="heroSliderStage">
+        <!-- Imagen 1 -->
+        <div class="slide-card pos-left" data-index="0" onclick="selectHeroSlide(0)">
+          <img id="heroImg0" src="https://images.unsplash.com/photo-1629909613654-28e377c37b09?auto=format&fit=crop&w=800&q=80" alt="Web Consultorio Profesional" />
+          <div class="absolute top-3 left-3 bg-black/70 backdrop-blur-md px-2.5 py-1 rounded-full border border-white/15 flex items-center gap-1.5">
+            <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
+            <span class="text-[10px] font-medium text-white">Consultorios</span>
+          </div>
+        </div>
+
+        <!-- Imagen 2 (Central por defecto) -->
+        <div class="slide-card pos-center" data-index="1" onclick="selectHeroSlide(1)">
+          <img id="heroImg1" src="https://images.unsplash.com/photo-1585747860715-2ba37e788b70?auto=format&fit=crop&w=800&q=80" alt="Web Barbería Profesional" />
+          <div class="absolute top-3 left-3 bg-black/70 backdrop-blur-md px-2.5 py-1 rounded-full border border-white/15 flex items-center gap-1.5">
+            <span class="w-2 h-2 rounded-full bg-amber-400"></span>
+            <span class="text-[10px] font-medium text-white">Barberías</span>
+          </div>
+        </div>
+
+        <!-- Imagen 3 -->
+        <div class="slide-card pos-right" data-index="2" onclick="selectHeroSlide(2)">
+          <img id="heroImg2" src="https://images.unsplash.com/photo-1441986300917-64674bd600d8?auto=format&fit=crop&w=800&q=80" alt="Web Negocios y Tiendas" />
+          <div class="absolute top-3 left-3 bg-black/70 backdrop-blur-md px-2.5 py-1 rounded-full border border-white/15 flex items-center gap-1.5">
+            <span class="w-2 h-2 rounded-full bg-sky-400"></span>
+            <span class="text-[10px] font-medium text-white">Negocios</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Indicadores del deslizador -->
+      <div class="flex items-center justify-center gap-2.5 mt-4">
+        <button onclick="selectHeroSlide(0)" class="hero-dot w-2 h-2 rounded-full bg-zinc-600 transition-all" aria-label="Imagen 1"></button>
+        <button onclick="selectHeroSlide(1)" class="hero-dot w-6 h-2 rounded-full bg-white transition-all" aria-label="Imagen 2"></button>
+        <button onclick="selectHeroSlide(2)" class="hero-dot w-2 h-2 rounded-full bg-zinc-600 transition-all" aria-label="Imagen 3"></button>
+      </div>
+    </section>
+
+    <!-- Texto Debajo del Carrusel Alineado a la Izquierda -->
+    <div class="mt-6 text-left reveal-on-scroll">
+      <p class="text-[#86868b] text-[15px] sm:text-[16px] leading-relaxed font-normal">
+        Convertimos las visitas de tu Instagram en clientes activos: centralizá tus turnos, recibí consultas directas en tu WhatsApp y escalá tu negocio optimizando la busqueda de tu profesion/servicios en el buscador.
+      </p>
+    </div>
+
+    <!-- SECCIÓN 2: BENEFICIOS (Exactamente como en el Video 2, arriba de Seguridad) -->
+    <section id="beneficios" class="mt-20 pt-4">
+      <div class="reveal-on-scroll">
+        <h2 class="text-white text-[28px] sm:text-[32px] font-normal tracking-tight uppercase pb-4 border-b border-white/15">
+          BENEFICIOS
+        </h2>
+      </div>
+
+      <div class="mt-6 mb-8 reveal-on-scroll">
+        <p class="text-white text-[20px] sm:text-[22px] leading-snug font-normal">
+          Una web hecha a medida, pensada para traer consultas y trabajar por vos todos los días.
+        </p>
+      </div>
+
+      <!-- Lista Numerada 01 a 04 con aparición en scroll -->
+      <div class="divide-y divide-white/15 border-t border-white/15">
+        <!-- Ítem 01 -->
+        <div class="py-6 flex items-start gap-6 reveal-on-scroll">
+          <span class="text-[#22c55e] text-xs font-medium pt-1.5 shrink-0">01</span>
+          <div>
+            <h3 class="text-white text-[19px] sm:text-[21px] font-medium leading-tight">
+              Diseño a medida
+            </h3>
+            <p class="text-[#9ca3af] text-[15px] sm:text-[16px] mt-1.5 leading-relaxed">
+              Nada de plantillas: se parece a tu negocio.
+            </p>
+          </div>
+        </div>
+
+        <!-- Ítem 02 -->
+        <div class="py-6 flex items-start gap-6 reveal-on-scroll">
+          <span class="text-[#22c55e] text-xs font-medium pt-1.5 shrink-0">02</span>
+          <div>
+            <h3 class="text-white text-[19px] sm:text-[21px] font-medium leading-tight">
+              Pensada para convertir
+            </h3>
+            <p class="text-[#9ca3af] text-[15px] sm:text-[16px] mt-1.5 leading-relaxed">
+              Cada pantalla lleva a escribir, llamar o comprar.
+            </p>
+          </div>
+        </div>
+
+        <!-- Ítem 03 -->
+        <div class="py-6 flex items-start gap-6 reveal-on-scroll">
+          <span class="text-[#22c55e] text-xs font-medium pt-1.5 shrink-0">03</span>
+          <div>
+            <h3 class="text-white text-[19px] sm:text-[21px] font-medium leading-tight">
+              Rápida de verdad
+            </h3>
+            <p class="text-[#9ca3af] text-[15px] sm:text-[16px] mt-1.5 leading-relaxed">
+              Código propio y liviano, impecable en el celular.
+            </p>
+          </div>
+        </div>
+
+        <!-- Ítem 04 -->
+        <div class="py-6 flex items-start gap-6 reveal-on-scroll">
+          <span class="text-[#22c55e] text-xs font-medium pt-1.5 shrink-0">04</span>
+          <div>
+            <h3 class="text-white text-[19px] sm:text-[21px] font-medium leading-tight">
+              Lista para Google
+            </h3>
+            <p class="text-[#9ca3af] text-[15px] sm:text-[16px] mt-1.5 leading-relaxed">
+              Te encuentran por lo que hacés.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tarjeta Blanca "Trato directo" (Video 2) -->
+      <div class="mt-4 bg-white text-black rounded-2xl p-5 flex items-center justify-between gap-4 shadow-lg reveal-on-scroll">
+        <p class="text-[14px] sm:text-[15px] leading-snug text-zinc-800">
+          <strong class="font-bold text-black">Trato directo</strong> Hablás siempre con quien hace el trabajo, también después del lanzamiento.
+        </p>
+        <button onclick="handleWhatsAppClick()" aria-label="Contactar" class="w-11 h-11 rounded-full bg-black text-white flex items-center justify-center shrink-0 hover:scale-105 active:scale-95 transition">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M7 17L17 7M17 7H8M17 7V16" />
+          </svg>
+        </button>
+      </div>
+    </section>
+
+    <hr class="border-white/10 my-20" />
+
+    <!-- SECCIÓN 3: SEGURIDAD PARA TU WEB (Formato Foto 2) -->
+    <section id="seguridad" class="reveal-on-scroll">
+      <p class="font-sf-text text-[#86868b] text-sm sm:text-base font-medium mb-1.5">
+        Arquitectura segura y confiable.
+      </p>
+      <h2 class="font-sf-display text-white text-3xl sm:text-4xl font-bold tracking-tight uppercase mb-6">
+        SEGURIDAD PARA TU WEB.
+      </h2>
+
+      <div class="font-sf-text text-[#86868b] text-[17px] sm:text-[19px] leading-[1.55] space-y-5 font-medium">
+        <p>
+          en <strong class="text-white font-semibold">LanzaWebs</strong> nos ocupamos de que tu sitio web cuente desde el primer dia con seguridad.
+        </p>
+        <p>
+          Todas nuestras páginas webs incluyen conexión segura y verificación de seguridad diaria. Protegiendo tus datos, turno o consulta que se realice. Además blindamos tu sitio contra accesos no deseados e integramos las <strong class="text-white font-semibold">Políticas de Privacidad, Avisos legales y el resguardo de datos personales necesarios</strong> para que tu negocio funcione con total respaldo, privacidad y tranquilidad.
+        </p>
+      </div>
+    </section>
+
+    <hr class="border-white/10 my-20" />
+
+    <!-- SECCIÓN 4: DOMINIO PERSONALIZADO -->
+    <section id="dominio" class="reveal-on-scroll">
+      <p class="font-sf-text text-[#86868b] text-sm sm:text-base font-medium mb-1.5">
+        Identidad digital propia.
+      </p>
+      <h2 class="font-sf-display text-white text-3xl sm:text-4xl font-bold tracking-tight uppercase mb-6">
+        DOMINIO PERSONALIZADO.
+      </h2>
+
+      <p class="font-sf-text text-[#86868b] text-[17px] sm:text-[19px] leading-[1.55] font-medium mb-8">
+        Tu marca merece una dirección única en internet. Configuramos tu dominio oficial con el nombre de tu proyecto u negocio para que tus clientes te encuentren rápido en Google, recuerden tu dirección fácilmente y accedan desde tu Instagram con una imagen 100% profesional y propia.
+      </p>
+
+      <!-- Ejemplos visuales de dominios -->
+      <div class="space-y-3">
+        <div class="bg-[#121214] border border-white/10 rounded-2xl px-4 py-3.5 flex items-center justify-between">
+          <div class="flex items-center gap-2.5">
+            <svg class="w-4 h-4 text-emerald-400 shrink-0" fill="currentColor" viewBox="0 0 20 20">
+              <path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd" />
+            </svg>
+            <span class="font-sf-text text-sm sm:text-base text-white font-medium tracking-tight">www.lanzawebs.com</span>
+          </div>
+          <span class="text-[11px] text-emerald-400 bg-emerald-400/10 px-2.5 py-0.5 rounded-full">Oficial</span>
+        </div>
+
+        <div class="bg-[#121214] border border-white/10 rounded-2xl px-4 py-3.5 flex items-center justify-between">
+          <div class="flex items-center gap-2.5">
+            <svg class="w-4 h-4 text-emerald-400 shrink-0" fill="currentColor" viewBox="0 0 20 20">
+              <path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd" />
+            </svg>
+            <span class="font-sf-text text-sm sm:text-base text-zinc-300 font-medium tracking-tight">www.tuconsultorio.com</span>
+          </div>
+          <span class="text-[11px] text-zinc-400 bg-white/5 px-2.5 py-0.5 rounded-full">Salud</span>
+        </div>
+
+        <div class="bg-[#121214] border border-white/10 rounded-2xl px-4 py-3.5 flex items-center justify-between">
+          <div class="flex items-center gap-2.5">
+            <svg class="w-4 h-4 text-emerald-400 shrink-0" fill="currentColor" viewBox="0 0 20 20">
+              <path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd" />
+            </svg>
+            <span class="font-sf-text text-sm sm:text-base text-zinc-300 font-medium tracking-tight">www.tunegocio.com</span>
+          </div>
+          <span class="text-[11px] text-zinc-400 bg-white/5 px-2.5 py-0.5 rounded-full">Comercio</span>
+        </div>
+      </div>
+    </section>
+
+    <hr class="border-white/10 my-20" />
+
+    <!-- SECCIÓN 5: ISLA INTERACTIVA (Foto 4) + CARRUSEL DE SECTORES (Foto 3) -->
+    <section id="sectores" class="reveal-on-scroll">
+      <!-- Isla estilo Foto 4 -->
+      <div class="flex justify-center mb-8">
+        <div class="apple-island" role="tablist" aria-label="Seleccionar rubro">
+          <div id="islandPill" class="island-pill-bg"></div>
+          <button type="button" class="island-btn active" onclick="selectSector(0)" role="tab" aria-selected="true">
+            CONSULTORIOS
+          </button>
+          <button type="button" class="island-btn" onclick="selectSector(1)" role="tab" aria-selected="false">
+            BARBEROS
+          </button>
+          <button type="button" class="island-btn" onclick="selectSector(2)" role="tab" aria-selected="false">
+            NEGOCIOS
+          </button>
+        </div>
+      </div>
+
+      <!-- Contenedor Carrusel Estilo Foto 3 -->
+      <div id="sectorCarousel" class="relative overflow-hidden">
+        <div id="sectorTrack" class="flex transition-transform duration-500 ease-out">
+
+          <!-- TARJETA 1: CONSULTORIOS -->
+          <div class="w-full shrink-0 px-1">
+            <div class="apple-feature-card">
+              <!-- Ícono Superior -->
+              <div class="mb-6">
+                <svg class="w-9 h-9 text-[#30d158]" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" />
+                </svg>
+              </div>
+
+              <h3 class="font-sf-display text-white text-[26px] sm:text-[30px] font-bold leading-tight mb-5">
+                Desarrollá tu consultorio profesional en la web.
+              </h3>
+
+              <p class="font-sf-text text-[#86868b] text-[16px] sm:text-[17px] leading-[1.55] font-medium mb-8">
+                Ideal para consultorios <strong class="text-white font-semibold">odontológicos, dermatológicos, kinesiología, psicología, nutrición y medicina general.</strong> Tener presencia visible en General Villegas y en el link de tu Instagram permite que tus pacientes puedan <strong class="text-white font-semibold">solicitar turnos online, enviar consultas directo al WhatsApp del profesional,</strong> conocer en detalle los tratamientos que realizás y ver con mapa interactivo <strong class="text-white font-semibold">en qué lugares y horarios atendés.</strong>
+              </p>
+
+              <div class="pt-4 border-t border-white/10">
+                <span class="block text-xs text-[#86868b] mb-1">Beneficio directo</span>
+                <p class="font-sf-display text-white text-2xl sm:text-3xl font-bold leading-tight">
+                  Turnos y consultas 24/7 directo a tu WhatsApp.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <!-- TARJETA 2: BARBEROS -->
+          <div class="w-full shrink-0 px-1">
+            <div class="apple-feature-card">
+              <div class="mb-6">
+                <svg class="w-9 h-9 text-[#ffd60a]" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M14.121 14.121L19 19m-7-7l7-7m-7 7l-2.879 2.879M12 12L9.121 9.121m0 5.758a3 3 0 10-4.243 4.243 3 3 0 004.243-4.243zm0-5.758a3 3 0 10-4.243-4.243 3 3 0 004.243 4.243z" />
+                </svg>
+              </div>
+
+              <h3 class="font-sf-display text-white text-[26px] sm:text-[30px] font-bold leading-tight mb-5">
+                Tu barbería con agenda llena y estilo propio.
+              </h3>
+
+              <p class="font-sf-text text-[#86868b] text-[16px] sm:text-[17px] leading-[1.55] font-medium mb-8">
+                Olvidate de perder tiempo respondiendo mensajes mientras estás cortando. Con tu propia web en tu biografía de Instagram, tus clientes pueden <strong class="text-white font-semibold">reservar su turno eligiendo día, horario y barbero,</strong> mirar tu galería de cortes y trabajos realizados, <strong class="text-white font-semibold">consultar precios actualizados de corte y barba</strong> y llegar directo a tu local en General Villegas con un solo toque.
+              </p>
+
+              <div class="pt-4 border-t border-white/10">
+                <span class="block text-xs text-[#86868b] mb-1">Automatización total</span>
+                <p class="font-sf-display text-white text-2xl sm:text-3xl font-bold leading-tight">
+                  Reservas de cortes sin interrumpir tu trabajo.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <!-- TARJETA 3: NEGOCIOS -->
+          <div class="w-full shrink-0 px-1">
+            <div class="apple-feature-card">
+              <div class="mb-6">
+                <svg class="w-9 h-9 text-[#0a84ff]" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+                </svg>
+              </div>
+
+              <h3 class="font-sf-display text-white text-[26px] sm:text-[30px] font-bold leading-tight mb-5">
+                Tu comercio o tienda abierta todo el día.
+              </h3>
+
+              <p class="font-sf-text text-[#86868b] text-[16px] sm:text-[17px] leading-[1.55] font-medium mb-8">
+                Diseñado para comercios locales, showrooms, gastronomía y emprendimientos que quieren vender más en la zona. Mostrá tu <strong class="text-white font-semibold">catálogo interactivo de productos o servicios,</strong> permití que tus clientes armen su pedido y lo <strong class="text-white font-semibold">envíen listo a tu WhatsApp para coordinar pago y entrega,</strong> posicionando tu marca en Google frente a quienes buscan comprar en General Villegas.
+              </p>
+
+              <div class="pt-4 border-t border-white/10">
+                <span class="block text-xs text-[#86868b] mb-1">Crecimiento comercial</span>
+                <p class="font-sf-display text-white text-2xl sm:text-3xl font-bold leading-tight">
+                  Catálogo online con pedidos directo al WhatsApp.
+                </p>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Indicadores de deslizamiento inferior -->
+      <div class="flex items-center justify-between mt-5 px-2 text-xs text-zinc-500">
+        <span>Deslizá hacia los lados o tocá la isla superior</span>
+        <div class="flex gap-2">
+          <button onclick="selectSector(0)" class="sector-dot w-2 h-2 rounded-full bg-white transition-all" aria-label="Consultorios"></button>
+          <button onclick="selectSector(1)" class="sector-dot w-2 h-2 rounded-full bg-zinc-700 transition-all" aria-label="Barberos"></button>
+          <button onclick="selectSector(2)" class="sector-dot w-2 h-2 rounded-full bg-zinc-700 transition-all" aria-label="Negocios"></button>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Pie de Página -->
+  <footer class="border-t border-white/10 py-10 px-6 text-center text-xs text-[#86868b]">
+    <div class="max-w-xl mx-auto space-y-2">
+      <p class="text-white font-semibold">LanzaWebs — General Villegas, Buenos Aires</p>
+      <p>Desarrollo de Páginas Web, Landing Pages y Tiendas Online a medida.</p>
+    </div>
+  </footer>
+
+  <!-- Botón Flotante de WhatsApp (Abajo a la derecha, sin número asignado aún) -->
+  <button
+    onclick="handleWhatsAppClick()"
+    aria-label="Consultar por WhatsApp"
+    class="fixed bottom-5 right-5 z-50 w-14 h-14 rounded-full bg-[#25D366] text-white shadow-[0_8px_30px_rgba(37,211,102,0.45)] flex items-center justify-center hover:scale-105 active:scale-95 transition-transform"
+  >
+    <svg class="w-7 h-7 fill-current" viewBox="0 0 24 24">
+      <path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.582 2.128 2.182-.573c.978.58 1.911.928 3.145.929 3.178 0 5.767-2.587 5.768-5.766.001-3.187-2.575-5.77-5.764-5.771zm3.392 8.244c-.144.405-.837.774-1.17.824-.299.045-.677.063-1.092-.069-.252-.08-.575-.187-.988-.365-1.739-.751-2.874-2.502-2.961-2.617-.087-.116-.708-.94-.708-1.793s.448-1.273.607-1.446c.159-.173.346-.217.462-.217l.332.006c.106.005.249-.04.39.298.144.347.491 1.2.534 1.287.043.087.072.188.014.304-.058.116-.087.188-.173.289l-.26.304c-.087.086-.177.18-.076.354.101.174.449.741.964 1.201.662.591 1.221.774 1.394.86s.274.072.376-.043c.101-.116.433-.506.549-.68.116-.173.231-.145.39-.087s1.011.477 1.184.564.289.13.332.202c.045.072.045.419-.1.824zm-3.423-14.416c-6.627 0-12 5.373-12 12 0 2.126.556 4.124 1.535 5.862l-1.535 5.608 5.749-1.508c1.696.906 3.631 1.425 5.689 1.425 6.627 0 12-5.373 12-12s-5.373-12-12.438-11.387z"/>
+    </svg>
+  </button>
+
+  <!-- Notificación Toast para el botón de WhatsApp sin número aún -->
+  <div id="waToast" class="fixed bottom-24 right-5 z-50 bg-zinc-900/95 border border-white/15 text-white text-xs px-4 py-3 rounded-2xl shadow-2xl opacity-0 pointer-events-none transition-opacity duration-300">
+    Próximamente: botón conectado al WhatsApp oficial de LanzaWebs.
+  </div>
+
+  <!-- SCRIPTS INTERACTIVOS -->
+  <script>
+    /* 1. Partículas geométricas (triángulos flotantes como en el Video 1) */
+    (function initHeroParticles() {
+      const canvas = document.getElementById('particlesCanvas');
+      if (!canvas) return;
+      const ctx = canvas.getContext('2d');
+      let width, height;
+      const particles = [];
+      const count = 38;
+
+      function resize() {
+        width = canvas.width = canvas.offsetWidth * window.devicePixelRatio;
+        height = canvas.height = canvas.offsetHeight * window.devicePixelRatio;
+        ctx.scale(window.devicePixelRatio, window.devicePixelRatio);
+      }
+
+      window.addEventListener('resize', resize);
+      resize();
+
+      for (let i = 0; i < count; i++) {
+        particles.push({
+          x: Math.random() * canvas.offsetWidth,
+          y: Math.random() * canvas.offsetHeight,
+          size: Math.random() * 4.5 + 1.5,
+          speedX: (Math.random() - 0.5) * 0.35,
+          speedY: (Math.random() - 0.5) * 0.35,
+          angle: Math.random() * Math.PI * 2,
+          spin: (Math.random() - 0.5) * 0.02,
+          alpha: Math.random() * 0.65 + 0.2
+        });
+      }
+
+      function animate() {
+        const w = canvas.offsetWidth;
+        const h = canvas.offsetHeight;
+        ctx.clearRect(0, 0, w, h);
+
+        particles.forEach(p => {
+          p.x += p.speedX;
+          p.y += p.speedY;
+          p.angle += p.spin;
+
+          if (p.x < -10) p.x = w + 10;
+          if (p.x > w + 10) p.x = -10;
+          if (p.y < -10) p.y = h + 10;
+          if (p.y > h + 10) p.y = -10;
+
+          ctx.save();
+          ctx.translate(p.x, p.y);
+          ctx.rotate(p.angle);
+          ctx.beginPath();
+          ctx.moveTo(0, -p.size);
+          ctx.lineTo(p.size * 0.85, p.size * 0.85);
+          ctx.lineTo(-p.size * 0.85, p.size * 0.85);
+          ctx.closePath();
+          ctx.fillStyle = `rgba(240, 245, 242, ${p.alpha})`;
+          ctx.fill();
+          ctx.restore();
+        });
+
+        requestAnimationFrame(animate);
+      }
+      animate();
+    })();
+
+    /* 2. Deslizador de 3 Imágenes a 0° en Portada */
+    let activeHeroIndex = 1;
+    const heroCards = document.querySelectorAll('#heroSliderStage .slide-card');
+    const heroDots = document.querySelectorAll('.hero-dot');
+
+    function selectHeroSlide(index) {
+      activeHeroIndex = (index + 3) % 3;
+      const leftIndex = (activeHeroIndex + 2) % 3;
+      const rightIndex = (activeHeroIndex + 1) % 3;
+
+      heroCards.forEach((card, idx) => {
+        card.classList.remove('pos-left', 'pos-center', 'pos-right');
+        if (idx === activeHeroIndex) {
+          card.classList.add('pos-center');
+        } else if (idx === leftIndex) {
+          card.classList.add('pos-left');
+        } else if (idx === rightIndex) {
+          card.classList.add('pos-right');
+        }
+      });
+
+      heroDots.forEach((dot, idx) => {
+        if (idx === activeHeroIndex) {
+          dot.className = 'hero-dot w-6 h-2 rounded-full bg-white transition-all';
+        } else {
+          dot.className = 'hero-dot w-2 h-2 rounded-full bg-zinc-600 transition-all';
+        }
+      });
+    }
+
+    // Soporte táctil para deslizar las 3 imágenes en el celular
+    const heroStage = document.getElementById('heroSliderStage');
+    let heroStartX = 0;
+    heroStage.addEventListener('touchstart', e => {
+      heroStartX = e.touches[0].clientX;
+    }, { passive: true });
+
+    heroStage.addEventListener('touchend', e => {
+      const diff = e.changedTouches[0].clientX - heroStartX;
+      if (Math.abs(diff) > 40) {
+        if (diff < 0) selectHeroSlide(activeHeroIndex + 1);
+        else selectHeroSlide(activeHeroIndex - 1);
+      }
+    }, { passive: true });
+
+    /* 3. Isla Interactiva + Carrusel de Sectores (Consultorios / Barberos / Negocios) */
+    let activeSectorIndex = 0;
+    const islandPill = document.getElementById('islandPill');
+    const islandBtns = document.querySelectorAll('.island-btn');
+    const sectorTrack = document.getElementById('sectorTrack');
+    const sectorDots = document.querySelectorAll('.sector-dot');
+
+    function selectSector(index) {
+      activeSectorIndex = Math.max(0, Math.min(2, index));
+      islandPill.style.transform = `translateX(${activeSectorIndex * 100}%)`;
+      sectorTrack.style.transform = `translateX(-${activeSectorIndex * 100}%)`;
+
+      islandBtns.forEach((btn, idx) => {
+        btn.classList.toggle('active', idx === activeSectorIndex);
+        btn.setAttribute('aria-selected', idx === activeSectorIndex);
+      });
+
+      sectorDots.forEach((dot, idx) => {
+        dot.className = idx === activeSectorIndex
+          ? 'sector-dot w-2 h-2 rounded-full bg-white transition-all'
+          : 'sector-dot w-2 h-2 rounded-full bg-zinc-700 transition-all';
+      });
+    }
+
+    // Soporte táctil para el carrusel de sectores
+    const sectorCarousel = document.getElementById('sectorCarousel');
+    let sectorStartX = 0;
+    sectorCarousel.addEventListener('touchstart', e => {
+      sectorStartX = e.touches[0].clientX;
+    }, { passive: true });
+
+    sectorCarousel.addEventListener('touchend', e => {
+      const diff = e.changedTouches[0].clientX - sectorStartX;
+      if (Math.abs(diff) > 45) {
+        if (diff < 0 && activeSectorIndex < 2) selectSector(activeSectorIndex + 1);
+        else if (diff > 0 && activeSectorIndex > 0) selectSector(activeSectorIndex - 1);
+      }
+    }, { passive: true });
+
+    /* 4. Animación de Aparición al Bajar por la Página (Scroll Reveal como en Video 2) */
+    const revealElements = document.querySelectorAll('.reveal-on-scroll');
+    const revealObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('is-visible');
+        }
+      });
+    }, {
+      threshold: 0.14,
+      rootMargin: '0px 0px -40px 0px'
+    });
+
+    revealElements.forEach(el => revealObserver.observe(el));
+
+    /* 5. Botón de WhatsApp (sin número por ahora) */
+    const phoneNumber = ''; // Cuando tengas el número, colocalo aquí (ej: '5493388123456')
+    function handleWhatsAppClick() {
+      if (phoneNumber.trim() !== '') {
+        const msg = encodeURIComponent('Hola LanzaWebs! Quiero consultar por el diseño de una página web.');
+        window.open(`https://wa.me/${phoneNumber}?text=${msg}`, '_blank');
+      } else {
+        const toast = document.getElementById('waToast');
+        toast.style.opacity = '1';
+        setTimeout(() => {
+          toast.style.opacity = '0';
+        }, 2600);
+      }
+    }
+  </script>
+</body>
+</html>
