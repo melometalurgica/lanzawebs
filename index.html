@@ -6,10 +6,10 @@
   <title>LanzaWebs — Agencia de Diseño Web en General Villegas</title>
   <meta name="description" content="Somos LanzaWebs, agencia de diseño web en General Villegas. Sitios web a medida para consultorios, barberías y negocios." />
 
-  <!-- Google Fonts: Cormorant Garamond & Plus Jakarta Sans -->
+  <!-- Google Fonts: Únicamente 2 familias en Contraste Total (Playfair Display + Lato) -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,600;0,700;1,600&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700;900&family=Playfair+Display:wght@700;800;900&display=swap" rel="stylesheet">
 
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
@@ -19,13 +19,12 @@
       --bg-black: #000000;
       --card-dark: #121214;
       --text-white: #f5f5f7;
-      --text-gray: #86868b;
+      --text-gray: #8e8e93;
       --apple-yellow: #ffd60a;
       --accent-green: #22c55e;
-      --sf-display: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Plus Jakarta Sans", sans-serif;
-      --sf-text: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Plus Jakarta Sans", sans-serif;
-      --serif-title: 'Cormorant Garamond', Georgia, serif;
-      --sans-clean: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+      /* Sistema de 2 únicas tipografías (Jerarquía y Contraste Total) */
+      --font-serif: 'Playfair Display', Georgia, serif;
+      --font-sans: 'Lato', -apple-system, BlinkMacSystemFont, sans-serif;
     }
 
     * {
@@ -36,50 +35,62 @@
     body {
       background-color: var(--bg-black);
       color: var(--text-white);
-      font-family: var(--sans-clean);
+      font-family: var(--font-sans);
+      font-weight: 400;
       margin: 0;
       padding: 0;
       overflow-x: hidden;
       -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
     }
 
-    /* Tipografías específicas */
-    .font-serif-luxury {
-      font-family: var(--serif-title);
-    }
-    .font-sf-display {
-      font-family: var(--sf-display);
-      letter-spacing: -0.025em;
-    }
-    .font-sf-text {
-      font-family: var(--sf-text);
-      letter-spacing: -0.01em;
+    /* Clases de Jerarquía Tipográfica (Playfair Display + Lato) */
+    .font-title-serif {
+      font-family: var(--font-serif);
     }
 
-    /* Estilo Visual Video 1: "Diseño web" con partículas y esfera 3D */
+    .font-heading-sans {
+      font-family: var(--font-sans);
+      font-weight: 900;
+      letter-spacing: -0.02em;
+    }
+
+    .font-body-sans {
+      font-family: var(--font-sans);
+      font-weight: 400;
+      letter-spacing: -0.005em;
+    }
+
+    /* ESCENARIO "Diseño web" (Idéntico a Foto 2, sin esfera) */
     .hero-visual-stage {
       position: relative;
       width: 100%;
-      height: 230px;
+      height: 185px;
       display: flex;
       align-items: center;
       justify-content: center;
       overflow: hidden;
-      margin: 0 auto;
+      margin: 6px auto 2px auto;
     }
 
     @media (min-width: 640px) {
       .hero-visual-stage {
-        height: 290px;
+        height: 235px;
       }
     }
 
+    /* Resplandor atmosférico verde oscuro detrás del texto */
     .hero-green-glow {
       position: absolute;
-      width: 320px;
-      height: 190px;
-      background: radial-gradient(ellipse at center, rgba(16, 185, 129, 0.24) 0%, rgba(6, 78, 59, 0.12) 45%, rgba(0, 0, 0, 0) 75%);
-      filter: blur(22px);
+      width: 92%;
+      height: 130px;
+      background: radial-gradient(
+        ellipse at 50% 50%,
+        rgba(18, 92, 58, 0.34) 0%,
+        rgba(10, 55, 35, 0.18) 45%,
+        rgba(0, 0, 0, 0) 78%
+      );
+      filter: blur(18px);
       z-index: 1;
       pointer-events: none;
     }
@@ -93,63 +104,30 @@
       pointer-events: none;
     }
 
+    /* Título "Diseño web" con serifa gruesa y textura metálica plateada */
     .hero-diseno-title {
       position: relative;
       z-index: 3;
-      font-family: var(--serif-title);
-      font-weight: 700;
-      font-size: clamp(3.5rem, 15vw, 6.2rem);
-      line-height: 0.95;
-      letter-spacing: -0.03em;
-      background: linear-gradient(180deg, #ffffff 0%, #f3f4f6 55%, #a1a1aa 100%);
+      font-family: var(--font-serif);
+      font-weight: 800;
+      font-size: clamp(3.55rem, 15.8vw, 5.8rem);
+      line-height: 1;
+      letter-spacing: -0.035em;
+      white-space: nowrap;
+      text-align: center;
+      background: linear-gradient(
+        175deg,
+        #ffffff 0%,
+        #f4f4f6 30%,
+        #d4d4d8 62%,
+        #8e8e96 88%,
+        #d4d4d8 100%
+      );
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
-      text-shadow: 0 12px 35px rgba(0, 0, 0, 0.85);
+      filter: drop-shadow(0 10px 24px rgba(0, 0, 0, 0.92));
       user-select: none;
-      padding: 0 12px;
-    }
-
-    /* Esfera 3D texturizada debajo de la "ñ / o" */
-    .sphere-3d {
-      position: absolute;
-      z-index: 4;
-      width: 38px;
-      height: 38px;
-      border-radius: 50%;
-      left: 52%;
-      bottom: 24%;
-      transform: translate(-50%, 42%);
-      background:
-        radial-gradient(circle at 30% 28%, rgba(255,255,255,0.95) 0%, rgba(210,210,215,0.85) 22%, rgba(90,90,98,0.9) 58%, #09090b 92%),
-        radial-gradient(circle at 65% 35%, #111 4px, transparent 5px),
-        radial-gradient(circle at 35% 65%, #111 5px, transparent 6px),
-        radial-gradient(circle at 70% 70%, #18181b 4px, transparent 5px),
-        radial-gradient(circle at 25% 30%, #27272a 3px, transparent 4px);
-      background-blend-mode: normal, multiply, multiply, multiply, multiply;
-      box-shadow:
-        -4px -4px 12px rgba(255, 255, 255, 0.25) inset,
-        6px 8px 16px rgba(0, 0, 0, 0.9),
-        0 0 20px rgba(0, 0, 0, 0.8);
-      animation: floatSphere 5s ease-in-out infinite;
-    }
-
-    .sphere-3d::after {
-      content: "";
-      position: absolute;
-      inset: 2px;
-      border-radius: 50%;
-      background-image:
-        radial-gradient(#09090b 18%, transparent 20%),
-        radial-gradient(#18181b 16%, transparent 18%);
-      background-position: 0 0, 7px 7px;
-      background-size: 14px 14px;
-      opacity: 0.55;
-      mix-blend-mode: overlay;
-    }
-
-    @keyframes floatSphere {
-      0%, 100% { transform: translate(-50%, 42%) rotate(0deg); }
-      50% { transform: translate(-50%, 34%) rotate(12deg); }
+      padding: 4px 8px;
     }
 
     /* Deslizador de 3 Imágenes Superpuestas a 0° (Rectas) */
@@ -157,7 +135,7 @@
       position: relative;
       width: 100%;
       max-width: 430px;
-      height: 360px;
+      height: 350px;
       margin: 0 auto;
       display: flex;
       align-items: center;
@@ -167,13 +145,13 @@
 
     .slide-card {
       position: absolute;
-      width: 215px;
-      height: 325px;
+      width: 210px;
+      height: 320px;
       border-radius: 22px;
       overflow: hidden;
-      background: #18181b;
+      background: #141416;
       border: 1px solid rgba(255, 255, 255, 0.14);
-      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.88);
+      box-shadow: 0 24px 48px -12px rgba(0, 0, 0, 0.9);
       transition: all 0.55s cubic-bezier(0.22, 1, 0.36, 1);
       cursor: pointer;
       user-select: none;
@@ -182,11 +160,11 @@
     @media (min-width: 640px) {
       .cards-stage {
         max-width: 520px;
-        height: 410px;
+        height: 400px;
       }
       .slide-card {
-        width: 245px;
-        height: 370px;
+        width: 240px;
+        height: 365px;
       }
     }
 
@@ -198,7 +176,7 @@
       pointer-events: none;
     }
 
-    /* Posiciones rectas a 0 grados sin rotación */
+    /* Posiciones a 0 grados (totalmente derechas) */
     .slide-card.pos-center {
       transform: translate3d(0, 0, 0) scale(1) rotate(0deg);
       z-index: 30;
@@ -208,32 +186,32 @@
     }
 
     .slide-card.pos-left {
-      transform: translate3d(-82px, 0, 0) scale(0.88) rotate(0deg);
+      transform: translate3d(-80px, 0, 0) scale(0.88) rotate(0deg);
       z-index: 20;
-      opacity: 0.65;
-      filter: brightness(0.68);
+      opacity: 0.62;
+      filter: brightness(0.65);
     }
 
     .slide-card.pos-right {
-      transform: translate3d(82px, 0, 0) scale(0.88) rotate(0deg);
+      transform: translate3d(80px, 0, 0) scale(0.88) rotate(0deg);
       z-index: 20;
-      opacity: 0.65;
-      filter: brightness(0.68);
+      opacity: 0.62;
+      filter: brightness(0.65);
     }
 
     @media (min-width: 640px) {
       .slide-card.pos-left {
-        transform: translate3d(-110px, 0, 0) scale(0.88) rotate(0deg);
+        transform: translate3d(-108px, 0, 0) scale(0.88) rotate(0deg);
       }
       .slide-card.pos-right {
-        transform: translate3d(110px, 0, 0) scale(0.88) rotate(0deg);
+        transform: translate3d(108px, 0, 0) scale(0.88) rotate(0deg);
       }
     }
 
-    /* Animación Scroll Reveal (como en el Video 2) */
+    /* Animación Scroll Reveal */
     .reveal-on-scroll {
       opacity: 0;
-      transform: translateY(30px);
+      transform: translateY(28px);
       filter: blur(4px);
       transition: opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1),
                   transform 0.7s cubic-bezier(0.22, 1, 0.36, 1),
@@ -247,7 +225,7 @@
       filter: blur(0);
     }
 
-    /* Isla estilo Apple (Foto 4) */
+    /* Isla Interactiva (Foto 4) */
     .apple-island {
       position: relative;
       display: inline-grid;
@@ -277,9 +255,10 @@
       position: relative;
       z-index: 2;
       padding: 10px 8px;
-      font-size: 0.73rem;
-      font-weight: 600;
-      letter-spacing: 0.04em;
+      font-family: var(--font-sans);
+      font-size: 0.74rem;
+      font-weight: 700;
+      letter-spacing: 0.05em;
       text-align: center;
       color: #d1d1d6;
       transition: color 0.3s ease;
@@ -292,7 +271,7 @@
       color: var(--apple-yellow);
     }
 
-    /* Tarjeta Carrusel estilo Foto 3 */
+    /* Tarjeta Carrusel (Foto 3) */
     .apple-feature-card {
       background: linear-gradient(180deg, #141416 0%, #0d0d0f 100%);
       border: 1px solid rgba(255, 255, 255, 0.1);
@@ -304,75 +283,74 @@
 </head>
 <body class="bg-black text-[#f5f5f7] selection:bg-emerald-500 selection:text-black">
 
-  <!-- Barra de Navegación Minimalista Estilo Apple -->
-  <header class="sticky top-0 z-50 backdrop-blur-xl bg-black/80 border-b border-white/[0.07]">
+  <!-- Barra de Navegación Minimalista -->
+  <header class="sticky top-0 z-50 backdrop-blur-xl bg-black/85 border-b border-white/[0.07]">
     <div class="max-w-5xl mx-auto px-5 h-14 flex items-center justify-between">
-      <a href="#" class="flex items-center gap-2 group">
-        <span class="font-semibold tracking-tight text-base text-white">LanzaWebs</span>
-        <span class="text-[10px] uppercase tracking-widest px-2 py-0.5 rounded-full bg-white/10 text-zinc-300">Villegas</span>
+      <a href="#" class="flex items-center gap-2.5">
+        <span class="font-bold tracking-tight text-[17px] text-white">LanzaWebs</span>
+        <span class="text-[10px] font-bold uppercase tracking-widest px-2.5 py-0.5 rounded-full bg-white/10 text-zinc-300">Villegas</span>
       </a>
 
-      <nav class="hidden sm:flex items-center gap-6 text-xs text-zinc-400">
+      <nav class="hidden sm:flex items-center gap-6 text-xs font-bold text-zinc-400">
         <a href="#beneficios" class="hover:text-white transition">Beneficios</a>
         <a href="#seguridad" class="hover:text-white transition">Seguridad</a>
         <a href="#dominio" class="hover:text-white transition">Dominio</a>
         <a href="#sectores" class="hover:text-white transition">Sectores</a>
       </nav>
 
-      <a href="#sectores" class="text-xs font-medium bg-white text-black px-3.5 py-1.5 rounded-full hover:bg-zinc-200 transition">
+      <a href="#sectores" class="text-xs font-bold bg-white text-black px-4 py-1.5 rounded-full hover:bg-zinc-200 transition">
         Explorar
       </a>
     </div>
   </header>
 
-  <!-- SECCIÓN 1: INGRESO PRINCIPAL (Estilo Video 1 + Deslizador 3 Imágenes) -->
-  <main class="max-w-xl mx-auto px-6 pt-4 pb-16">
+  <!-- CONTENIDO PRINCIPAL -->
+  <main class="max-w-xl mx-auto px-6 pt-2 pb-16">
 
-    <!-- Bloque Visual "Diseño web" con Partículas y Esfera 3D -->
+    <!-- SECCIÓN 1: ENCABEZADO VISUAL "Diseño web" (Como Foto 2, sin esfera) -->
     <div class="hero-visual-stage reveal-on-scroll is-visible">
       <div class="hero-green-glow"></div>
       <canvas id="particlesCanvas"></canvas>
       <h1 class="hero-diseno-title">Diseño web</h1>
-      <div class="sphere-3d" aria-hidden="true"></div>
     </div>
 
-    <!-- Subtítulo de Presentación LanzaWebs -->
-    <div class="mt-2 text-left space-y-2.5 reveal-on-scroll is-visible">
-      <p class="text-[#86868b] text-[15px] sm:text-[17px] leading-relaxed font-normal">
-        Somos <strong class="text-white font-semibold">LanzaWebs.</strong> una agencia de diseño web ubicada en General Villegas.
+    <!-- Subtítulo de Presentación con Jerarquía Clara (Lato Regular + Bold) -->
+    <div class="mt-3 text-left space-y-3 reveal-on-scroll is-visible">
+      <p class="font-body-sans text-[#8e8e93] text-[16px] sm:text-[18px] leading-[1.55]">
+        Somos <strong class="text-white font-bold">LanzaWebs.</strong> una agencia de diseño web ubicada en General Villegas.
       </p>
-      <p class="text-[#86868b] text-[15px] sm:text-[17px] leading-relaxed font-normal">
-        Sitios Webs a medida, enfocadas en <strong class="text-white font-semibold">consultorios, barberias, y todo tipo de negocios</strong> que buscan dar un salto y impulsar su visibilidad en la zona.
+      <p class="font-body-sans text-[#8e8e93] text-[16px] sm:text-[18px] leading-[1.55]">
+        Sitios Webs a medida, enfocadas en <strong class="text-white font-bold">consultorios, barberias, y todo tipo de negocios</strong> que buscan dar un salto y impulsar su visibilidad en la zona.
       </p>
     </div>
 
     <!-- Deslizador Central de 3 Imágenes a 0° (Rectas) -->
-    <section class="mt-10 mb-8 reveal-on-scroll" aria-label="Galería de proyectos">
+    <section class="mt-9 mb-8 reveal-on-scroll" aria-label="Galería de proyectos">
       <div class="cards-stage" id="heroSliderStage">
         <!-- Imagen 1 -->
         <div class="slide-card pos-left" data-index="0" onclick="selectHeroSlide(0)">
           <img id="heroImg0" src="https://images.unsplash.com/photo-1629909613654-28e377c37b09?auto=format&fit=crop&w=800&q=80" alt="Web Consultorio Profesional" />
-          <div class="absolute top-3 left-3 bg-black/70 backdrop-blur-md px-2.5 py-1 rounded-full border border-white/15 flex items-center gap-1.5">
+          <div class="absolute top-3 left-3 bg-black/75 backdrop-blur-md px-2.5 py-1 rounded-full border border-white/15 flex items-center gap-1.5">
             <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
-            <span class="text-[10px] font-medium text-white">Consultorios</span>
+            <span class="text-[11px] font-bold text-white">Consultorios</span>
           </div>
         </div>
 
         <!-- Imagen 2 (Central por defecto) -->
         <div class="slide-card pos-center" data-index="1" onclick="selectHeroSlide(1)">
           <img id="heroImg1" src="https://images.unsplash.com/photo-1585747860715-2ba37e788b70?auto=format&fit=crop&w=800&q=80" alt="Web Barbería Profesional" />
-          <div class="absolute top-3 left-3 bg-black/70 backdrop-blur-md px-2.5 py-1 rounded-full border border-white/15 flex items-center gap-1.5">
+          <div class="absolute top-3 left-3 bg-black/75 backdrop-blur-md px-2.5 py-1 rounded-full border border-white/15 flex items-center gap-1.5">
             <span class="w-2 h-2 rounded-full bg-amber-400"></span>
-            <span class="text-[10px] font-medium text-white">Barberías</span>
+            <span class="text-[11px] font-bold text-white">Barberías</span>
           </div>
         </div>
 
         <!-- Imagen 3 -->
         <div class="slide-card pos-right" data-index="2" onclick="selectHeroSlide(2)">
           <img id="heroImg2" src="https://images.unsplash.com/photo-1441986300917-64674bd600d8?auto=format&fit=crop&w=800&q=80" alt="Web Negocios y Tiendas" />
-          <div class="absolute top-3 left-3 bg-black/70 backdrop-blur-md px-2.5 py-1 rounded-full border border-white/15 flex items-center gap-1.5">
+          <div class="absolute top-3 left-3 bg-black/75 backdrop-blur-md px-2.5 py-1 rounded-full border border-white/15 flex items-center gap-1.5">
             <span class="w-2 h-2 rounded-full bg-sky-400"></span>
-            <span class="text-[10px] font-medium text-white">Negocios</span>
+            <span class="text-[11px] font-bold text-white">Negocios</span>
           </div>
         </div>
       </div>
@@ -387,21 +365,21 @@
 
     <!-- Texto Debajo del Carrusel Alineado a la Izquierda -->
     <div class="mt-6 text-left reveal-on-scroll">
-      <p class="text-[#86868b] text-[15px] sm:text-[16px] leading-relaxed font-normal">
+      <p class="font-body-sans text-[#8e8e93] text-[16px] sm:text-[17px] leading-[1.6]">
         Convertimos las visitas de tu Instagram en clientes activos: centralizá tus turnos, recibí consultas directas en tu WhatsApp y escalá tu negocio optimizando la busqueda de tu profesion/servicios en el buscador.
       </p>
     </div>
 
-    <!-- SECCIÓN 2: BENEFICIOS (Exactamente como en el Video 2, arriba de Seguridad) -->
-    <section id="beneficios" class="mt-20 pt-4">
+    <!-- SECCIÓN 2: BENEFICIOS (Debajo del texto de conversión y arriba de Seguridad) -->
+    <section id="beneficios" class="mt-20 pt-2">
       <div class="reveal-on-scroll">
-        <h2 class="text-white text-[28px] sm:text-[32px] font-normal tracking-tight uppercase pb-4 border-b border-white/15">
+        <h2 class="font-body-sans text-white text-[28px] sm:text-[32px] font-normal tracking-tight uppercase pb-4 border-b border-white/15">
           BENEFICIOS
         </h2>
       </div>
 
       <div class="mt-6 mb-8 reveal-on-scroll">
-        <p class="text-white text-[20px] sm:text-[22px] leading-snug font-normal">
+        <p class="font-body-sans text-white text-[20px] sm:text-[22px] leading-[1.4] font-normal">
           Una web hecha a medida, pensada para traer consultas y trabajar por vos todos los días.
         </p>
       </div>
@@ -410,12 +388,12 @@
       <div class="divide-y divide-white/15 border-t border-white/15">
         <!-- Ítem 01 -->
         <div class="py-6 flex items-start gap-6 reveal-on-scroll">
-          <span class="text-[#22c55e] text-xs font-medium pt-1.5 shrink-0">01</span>
+          <span class="text-[#22c55e] text-xs font-bold pt-1.5 shrink-0">01</span>
           <div>
-            <h3 class="text-white text-[19px] sm:text-[21px] font-medium leading-tight">
+            <h3 class="text-white text-[20px] sm:text-[21px] font-bold leading-tight">
               Diseño a medida
             </h3>
-            <p class="text-[#9ca3af] text-[15px] sm:text-[16px] mt-1.5 leading-relaxed">
+            <p class="font-body-sans text-[#8e8e93] text-[15px] sm:text-[16px] mt-1.5 leading-relaxed">
               Nada de plantillas: se parece a tu negocio.
             </p>
           </div>
@@ -423,12 +401,12 @@
 
         <!-- Ítem 02 -->
         <div class="py-6 flex items-start gap-6 reveal-on-scroll">
-          <span class="text-[#22c55e] text-xs font-medium pt-1.5 shrink-0">02</span>
+          <span class="text-[#22c55e] text-xs font-bold pt-1.5 shrink-0">02</span>
           <div>
-            <h3 class="text-white text-[19px] sm:text-[21px] font-medium leading-tight">
+            <h3 class="text-white text-[20px] sm:text-[21px] font-bold leading-tight">
               Pensada para convertir
             </h3>
-            <p class="text-[#9ca3af] text-[15px] sm:text-[16px] mt-1.5 leading-relaxed">
+            <p class="font-body-sans text-[#8e8e93] text-[15px] sm:text-[16px] mt-1.5 leading-relaxed">
               Cada pantalla lleva a escribir, llamar o comprar.
             </p>
           </div>
@@ -436,12 +414,12 @@
 
         <!-- Ítem 03 -->
         <div class="py-6 flex items-start gap-6 reveal-on-scroll">
-          <span class="text-[#22c55e] text-xs font-medium pt-1.5 shrink-0">03</span>
+          <span class="text-[#22c55e] text-xs font-bold pt-1.5 shrink-0">03</span>
           <div>
-            <h3 class="text-white text-[19px] sm:text-[21px] font-medium leading-tight">
+            <h3 class="text-white text-[20px] sm:text-[21px] font-bold leading-tight">
               Rápida de verdad
             </h3>
-            <p class="text-[#9ca3af] text-[15px] sm:text-[16px] mt-1.5 leading-relaxed">
+            <p class="font-body-sans text-[#8e8e93] text-[15px] sm:text-[16px] mt-1.5 leading-relaxed">
               Código propio y liviano, impecable en el celular.
             </p>
           </div>
@@ -449,22 +427,22 @@
 
         <!-- Ítem 04 -->
         <div class="py-6 flex items-start gap-6 reveal-on-scroll">
-          <span class="text-[#22c55e] text-xs font-medium pt-1.5 shrink-0">04</span>
+          <span class="text-[#22c55e] text-xs font-bold pt-1.5 shrink-0">04</span>
           <div>
-            <h3 class="text-white text-[19px] sm:text-[21px] font-medium leading-tight">
+            <h3 class="text-white text-[20px] sm:text-[21px] font-bold leading-tight">
               Lista para Google
             </h3>
-            <p class="text-[#9ca3af] text-[15px] sm:text-[16px] mt-1.5 leading-relaxed">
+            <p class="font-body-sans text-[#8e8e93] text-[15px] sm:text-[16px] mt-1.5 leading-relaxed">
               Te encuentran por lo que hacés.
             </p>
           </div>
         </div>
       </div>
 
-      <!-- Tarjeta Blanca "Trato directo" (Video 2) -->
+      <!-- Tarjeta Blanca "Trato directo" -->
       <div class="mt-4 bg-white text-black rounded-2xl p-5 flex items-center justify-between gap-4 shadow-lg reveal-on-scroll">
-        <p class="text-[14px] sm:text-[15px] leading-snug text-zinc-800">
-          <strong class="font-bold text-black">Trato directo</strong> Hablás siempre con quien hace el trabajo, también después del lanzamiento.
+        <p class="font-body-sans text-[14px] sm:text-[15px] leading-snug text-zinc-800">
+          <strong class="font-black text-black">Trato directo</strong> Hablás siempre con quien hace el trabajo, también después del lanzamiento.
         </p>
         <button onclick="handleWhatsAppClick()" aria-label="Contactar" class="w-11 h-11 rounded-full bg-black text-white flex items-center justify-center shrink-0 hover:scale-105 active:scale-95 transition">
           <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
@@ -476,21 +454,21 @@
 
     <hr class="border-white/10 my-20" />
 
-    <!-- SECCIÓN 3: SEGURIDAD PARA TU WEB (Formato Foto 2) -->
+    <!-- SECCIÓN 3: SEGURIDAD PARA TU WEB -->
     <section id="seguridad" class="reveal-on-scroll">
-      <p class="font-sf-text text-[#86868b] text-sm sm:text-base font-medium mb-1.5">
+      <p class="font-body-sans text-[#8e8e93] text-sm sm:text-base font-bold mb-1.5">
         Arquitectura segura y confiable.
       </p>
-      <h2 class="font-sf-display text-white text-3xl sm:text-4xl font-bold tracking-tight uppercase mb-6">
+      <h2 class="font-heading-sans text-white text-3xl sm:text-4xl uppercase mb-6">
         SEGURIDAD PARA TU WEB.
       </h2>
 
-      <div class="font-sf-text text-[#86868b] text-[17px] sm:text-[19px] leading-[1.55] space-y-5 font-medium">
+      <div class="font-body-sans text-[#8e8e93] text-[17px] sm:text-[19px] leading-[1.6] space-y-5">
         <p>
-          en <strong class="text-white font-semibold">LanzaWebs</strong> nos ocupamos de que tu sitio web cuente desde el primer dia con seguridad.
+          en <strong class="text-white font-bold">LanzaWebs</strong> nos ocupamos de que tu sitio web cuente desde el primer dia con seguridad.
         </p>
         <p>
-          Todas nuestras páginas webs incluyen conexión segura y verificación de seguridad diaria. Protegiendo tus datos, turno o consulta que se realice. Además blindamos tu sitio contra accesos no deseados e integramos las <strong class="text-white font-semibold">Políticas de Privacidad, Avisos legales y el resguardo de datos personales necesarios</strong> para que tu negocio funcione con total respaldo, privacidad y tranquilidad.
+          Todas nuestras páginas webs incluyen conexión segura y verificación de seguridad diaria. Protegiendo tus datos, turno o consulta que se realice. Además blindamos tu sitio contra accesos no deseados e integramos las <strong class="text-white font-bold">Políticas de Privacidad, Avisos legales y el resguardo de datos personales necesarios</strong> para que tu negocio funcione con total respaldo, privacidad y tranquilidad.
         </p>
       </div>
     </section>
@@ -499,14 +477,14 @@
 
     <!-- SECCIÓN 4: DOMINIO PERSONALIZADO -->
     <section id="dominio" class="reveal-on-scroll">
-      <p class="font-sf-text text-[#86868b] text-sm sm:text-base font-medium mb-1.5">
+      <p class="font-body-sans text-[#8e8e93] text-sm sm:text-base font-bold mb-1.5">
         Identidad digital propia.
       </p>
-      <h2 class="font-sf-display text-white text-3xl sm:text-4xl font-bold tracking-tight uppercase mb-6">
+      <h2 class="font-heading-sans text-white text-3xl sm:text-4xl uppercase mb-6">
         DOMINIO PERSONALIZADO.
       </h2>
 
-      <p class="font-sf-text text-[#86868b] text-[17px] sm:text-[19px] leading-[1.55] font-medium mb-8">
+      <p class="font-body-sans text-[#8e8e93] text-[17px] sm:text-[19px] leading-[1.6] mb-8">
         Tu marca merece una dirección única en internet. Configuramos tu dominio oficial con el nombre de tu proyecto u negocio para que tus clientes te encuentren rápido en Google, recuerden tu dirección fácilmente y accedan desde tu Instagram con una imagen 100% profesional y propia.
       </p>
 
@@ -517,9 +495,9 @@
             <svg class="w-4 h-4 text-emerald-400 shrink-0" fill="currentColor" viewBox="0 0 20 20">
               <path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd" />
             </svg>
-            <span class="font-sf-text text-sm sm:text-base text-white font-medium tracking-tight">www.lanzawebs.com</span>
+            <span class="font-body-sans text-sm sm:text-base text-white font-bold tracking-tight">www.lanzawebs.com</span>
           </div>
-          <span class="text-[11px] text-emerald-400 bg-emerald-400/10 px-2.5 py-0.5 rounded-full">Oficial</span>
+          <span class="text-[11px] font-bold text-emerald-400 bg-emerald-400/10 px-2.5 py-0.5 rounded-full">Oficial</span>
         </div>
 
         <div class="bg-[#121214] border border-white/10 rounded-2xl px-4 py-3.5 flex items-center justify-between">
@@ -527,9 +505,9 @@
             <svg class="w-4 h-4 text-emerald-400 shrink-0" fill="currentColor" viewBox="0 0 20 20">
               <path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd" />
             </svg>
-            <span class="font-sf-text text-sm sm:text-base text-zinc-300 font-medium tracking-tight">www.tuconsultorio.com</span>
+            <span class="font-body-sans text-sm sm:text-base text-zinc-300 font-bold tracking-tight">www.tuconsultorio.com</span>
           </div>
-          <span class="text-[11px] text-zinc-400 bg-white/5 px-2.5 py-0.5 rounded-full">Salud</span>
+          <span class="text-[11px] font-bold text-zinc-400 bg-white/5 px-2.5 py-0.5 rounded-full">Salud</span>
         </div>
 
         <div class="bg-[#121214] border border-white/10 rounded-2xl px-4 py-3.5 flex items-center justify-between">
@@ -537,9 +515,9 @@
             <svg class="w-4 h-4 text-emerald-400 shrink-0" fill="currentColor" viewBox="0 0 20 20">
               <path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd" />
             </svg>
-            <span class="font-sf-text text-sm sm:text-base text-zinc-300 font-medium tracking-tight">www.tunegocio.com</span>
+            <span class="font-body-sans text-sm sm:text-base text-zinc-300 font-bold tracking-tight">www.tunegocio.com</span>
           </div>
-          <span class="text-[11px] text-zinc-400 bg-white/5 px-2.5 py-0.5 rounded-full">Comercio</span>
+          <span class="text-[11px] font-bold text-zinc-400 bg-white/5 px-2.5 py-0.5 rounded-full">Comercio</span>
         </div>
       </div>
     </section>
@@ -548,7 +526,7 @@
 
     <!-- SECCIÓN 5: ISLA INTERACTIVA (Foto 4) + CARRUSEL DE SECTORES (Foto 3) -->
     <section id="sectores" class="reveal-on-scroll">
-      <!-- Isla estilo Foto 4 -->
+      <!-- Isla superior -->
       <div class="flex justify-center mb-8">
         <div class="apple-island" role="tablist" aria-label="Seleccionar rubro">
           <div id="islandPill" class="island-pill-bg"></div>
@@ -564,31 +542,30 @@
         </div>
       </div>
 
-      <!-- Contenedor Carrusel Estilo Foto 3 -->
+      <!-- Contenedor Carrusel -->
       <div id="sectorCarousel" class="relative overflow-hidden">
         <div id="sectorTrack" class="flex transition-transform duration-500 ease-out">
 
           <!-- TARJETA 1: CONSULTORIOS -->
           <div class="w-full shrink-0 px-1">
             <div class="apple-feature-card">
-              <!-- Ícono Superior -->
               <div class="mb-6">
                 <svg class="w-9 h-9 text-[#30d158]" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" />
                 </svg>
               </div>
 
-              <h3 class="font-sf-display text-white text-[26px] sm:text-[30px] font-bold leading-tight mb-5">
+              <h3 class="font-title-serif text-white text-[26px] sm:text-[30px] font-bold leading-tight mb-5">
                 Desarrollá tu consultorio profesional en la web.
               </h3>
 
-              <p class="font-sf-text text-[#86868b] text-[16px] sm:text-[17px] leading-[1.55] font-medium mb-8">
-                Ideal para consultorios <strong class="text-white font-semibold">odontológicos, dermatológicos, kinesiología, psicología, nutrición y medicina general.</strong> Tener presencia visible en General Villegas y en el link de tu Instagram permite que tus pacientes puedan <strong class="text-white font-semibold">solicitar turnos online, enviar consultas directo al WhatsApp del profesional,</strong> conocer en detalle los tratamientos que realizás y ver con mapa interactivo <strong class="text-white font-semibold">en qué lugares y horarios atendés.</strong>
+              <p class="font-body-sans text-[#8e8e93] text-[16px] sm:text-[17px] leading-[1.6] mb-8">
+                Ideal para consultorios <strong class="text-white font-bold">odontológicos, dermatológicos, kinesiología, psicología, nutrición y medicina general.</strong> Tener presencia visible en General Villegas y en el link de tu Instagram permite que tus pacientes puedan <strong class="text-white font-bold">solicitar turnos online, enviar consultas directo al WhatsApp del profesional,</strong> conocer en detalle los tratamientos que realizás y ver con mapa interactivo <strong class="text-white font-bold">en qué lugares y horarios atendés.</strong>
               </p>
 
               <div class="pt-4 border-t border-white/10">
-                <span class="block text-xs text-[#86868b] mb-1">Beneficio directo</span>
-                <p class="font-sf-display text-white text-2xl sm:text-3xl font-bold leading-tight">
+                <span class="block text-xs font-bold text-[#8e8e93] mb-1">Beneficio directo</span>
+                <p class="font-heading-sans text-white text-2xl sm:text-3xl leading-tight">
                   Turnos y consultas 24/7 directo a tu WhatsApp.
                 </p>
               </div>
@@ -604,17 +581,17 @@
                 </svg>
               </div>
 
-              <h3 class="font-sf-display text-white text-[26px] sm:text-[30px] font-bold leading-tight mb-5">
+              <h3 class="font-title-serif text-white text-[26px] sm:text-[30px] font-bold leading-tight mb-5">
                 Tu barbería con agenda llena y estilo propio.
               </h3>
 
-              <p class="font-sf-text text-[#86868b] text-[16px] sm:text-[17px] leading-[1.55] font-medium mb-8">
-                Olvidate de perder tiempo respondiendo mensajes mientras estás cortando. Con tu propia web en tu biografía de Instagram, tus clientes pueden <strong class="text-white font-semibold">reservar su turno eligiendo día, horario y barbero,</strong> mirar tu galería de cortes y trabajos realizados, <strong class="text-white font-semibold">consultar precios actualizados de corte y barba</strong> y llegar directo a tu local en General Villegas con un solo toque.
+              <p class="font-body-sans text-[#8e8e93] text-[16px] sm:text-[17px] leading-[1.6] mb-8">
+                Olvidate de perder tiempo respondiendo mensajes mientras estás cortando. Con tu propia web en tu biografía de Instagram, tus clientes pueden <strong class="text-white font-bold">reservar su turno eligiendo día, horario y barbero,</strong> mirar tu galería de cortes y trabajos realizados, <strong class="text-white font-bold">consultar precios actualizados de corte y barba</strong> y llegar directo a tu local en General Villegas con un solo toque.
               </p>
 
               <div class="pt-4 border-t border-white/10">
-                <span class="block text-xs text-[#86868b] mb-1">Automatización total</span>
-                <p class="font-sf-display text-white text-2xl sm:text-3xl font-bold leading-tight">
+                <span class="block text-xs font-bold text-[#8e8e93] mb-1">Automatización total</span>
+                <p class="font-heading-sans text-white text-2xl sm:text-3xl leading-tight">
                   Reservas de cortes sin interrumpir tu trabajo.
                 </p>
               </div>
@@ -630,17 +607,17 @@
                 </svg>
               </div>
 
-              <h3 class="font-sf-display text-white text-[26px] sm:text-[30px] font-bold leading-tight mb-5">
+              <h3 class="font-title-serif text-white text-[26px] sm:text-[30px] font-bold leading-tight mb-5">
                 Tu comercio o tienda abierta todo el día.
               </h3>
 
-              <p class="font-sf-text text-[#86868b] text-[16px] sm:text-[17px] leading-[1.55] font-medium mb-8">
-                Diseñado para comercios locales, showrooms, gastronomía y emprendimientos que quieren vender más en la zona. Mostrá tu <strong class="text-white font-semibold">catálogo interactivo de productos o servicios,</strong> permití que tus clientes armen su pedido y lo <strong class="text-white font-semibold">envíen listo a tu WhatsApp para coordinar pago y entrega,</strong> posicionando tu marca en Google frente a quienes buscan comprar en General Villegas.
+              <p class="font-body-sans text-[#8e8e93] text-[16px] sm:text-[17px] leading-[1.6] mb-8">
+                Diseñado para comercios locales, showrooms, gastronomía y emprendimientos que quieren vender más en la zona. Mostrá tu <strong class="text-white font-bold">catálogo interactivo de productos o servicios,</strong> permití que tus clientes armen su pedido y lo <strong class="text-white font-bold">envíen listo a tu WhatsApp para coordinar pago y entrega,</strong> posicionando tu marca en Google frente a quienes buscan comprar en General Villegas.
               </p>
 
               <div class="pt-4 border-t border-white/10">
-                <span class="block text-xs text-[#86868b] mb-1">Crecimiento comercial</span>
-                <p class="font-sf-display text-white text-2xl sm:text-3xl font-bold leading-tight">
+                <span class="block text-xs font-bold text-[#8e8e93] mb-1">Crecimiento comercial</span>
+                <p class="font-heading-sans text-white text-2xl sm:text-3xl leading-tight">
                   Catálogo online con pedidos directo al WhatsApp.
                 </p>
               </div>
@@ -664,9 +641,9 @@
   </main>
 
   <!-- Pie de Página -->
-  <footer class="border-t border-white/10 py-10 px-6 text-center text-xs text-[#86868b]">
+  <footer class="border-t border-white/10 py-10 px-6 text-center text-xs text-[#8e8e93]">
     <div class="max-w-xl mx-auto space-y-2">
-      <p class="text-white font-semibold">LanzaWebs — General Villegas, Buenos Aires</p>
+      <p class="text-white font-bold">LanzaWebs — General Villegas, Buenos Aires</p>
       <p>Desarrollo de Páginas Web, Landing Pages y Tiendas Online a medida.</p>
     </div>
   </footer>
@@ -689,64 +666,95 @@
 
   <!-- SCRIPTS INTERACTIVOS -->
   <script>
-    /* 1. Partículas geométricas (triángulos flotantes como en el Video 1) */
+    /* 1. Nube densa de micro-partículas y fragmentos triangulares (Como Foto 2) */
     (function initHeroParticles() {
       const canvas = document.getElementById('particlesCanvas');
       if (!canvas) return;
       const ctx = canvas.getContext('2d');
-      let width, height;
-      const particles = [];
-      const count = 38;
+      let particles = [];
+      const totalParticles = 155;
 
       function resize() {
-        width = canvas.width = canvas.offsetWidth * window.devicePixelRatio;
-        height = canvas.height = canvas.offsetHeight * window.devicePixelRatio;
-        ctx.scale(window.devicePixelRatio, window.devicePixelRatio);
+        const dpr = window.devicePixelRatio || 1;
+        canvas.width = canvas.offsetWidth * dpr;
+        canvas.height = canvas.offsetHeight * dpr;
+        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
       }
 
-      window.addEventListener('resize', resize);
+      function createParticles() {
+        const w = canvas.offsetWidth;
+        const h = canvas.offsetHeight;
+        particles = [];
+
+        for (let i = 0; i < totalParticles; i++) {
+          // Distribución más concentrada hacia la franja central del texto "Diseño web"
+          const spreadX = (Math.random() + Math.random() - 1) * (w * 0.52);
+          const spreadY = (Math.random() + Math.random() - 1) * (h * 0.44);
+
+          const isTinySpec = Math.random() < 0.58; // 58% polvo estelar diminuto, 42% micro-triángulos nítidos
+          particles.push({
+            x: w / 2 + spreadX,
+            y: h / 2 + spreadY,
+            size: isTinySpec ? (Math.random() * 1.4 + 0.5) : (Math.random() * 3.2 + 1.4),
+            isTiny: isTinySpec,
+            speedX: (Math.random() - 0.5) * 0.22,
+            speedY: (Math.random() - 0.5) * 0.18,
+            angle: Math.random() * Math.PI * 2,
+            spin: (Math.random() - 0.5) * 0.015,
+            tilt: Math.random() * Math.PI,
+            tiltSpeed: (Math.random() - 0.5) * 0.02,
+            alpha: isTinySpec ? (Math.random() * 0.55 + 0.15) : (Math.random() * 0.75 + 0.2)
+          });
+        }
+      }
+
+      window.addEventListener('resize', () => {
+        resize();
+        createParticles();
+      });
+
       resize();
-
-      for (let i = 0; i < count; i++) {
-        particles.push({
-          x: Math.random() * canvas.offsetWidth,
-          y: Math.random() * canvas.offsetHeight,
-          size: Math.random() * 4.5 + 1.5,
-          speedX: (Math.random() - 0.5) * 0.35,
-          speedY: (Math.random() - 0.5) * 0.35,
-          angle: Math.random() * Math.PI * 2,
-          spin: (Math.random() - 0.5) * 0.02,
-          alpha: Math.random() * 0.65 + 0.2
-        });
-      }
+      createParticles();
 
       function animate() {
         const w = canvas.offsetWidth;
         const h = canvas.offsetHeight;
         ctx.clearRect(0, 0, w, h);
 
-        particles.forEach(p => {
+        for (let i = 0; i < particles.length; i++) {
+          const p = particles[i];
           p.x += p.speedX;
           p.y += p.speedY;
           p.angle += p.spin;
+          p.tilt += p.tiltSpeed;
 
-          if (p.x < -10) p.x = w + 10;
-          if (p.x > w + 10) p.x = -10;
-          if (p.y < -10) p.y = h + 10;
-          if (p.y > h + 10) p.y = -10;
+          if (p.x < -8) p.x = w + 8;
+          if (p.x > w + 8) p.x = -8;
+          if (p.y < -8) p.y = h + 8;
+          if (p.y > h + 8) p.y = -8;
 
           ctx.save();
           ctx.translate(p.x, p.y);
           ctx.rotate(p.angle);
-          ctx.beginPath();
-          ctx.moveTo(0, -p.size);
-          ctx.lineTo(p.size * 0.85, p.size * 0.85);
-          ctx.lineTo(-p.size * 0.85, p.size * 0.85);
-          ctx.closePath();
-          ctx.fillStyle = `rgba(240, 245, 242, ${p.alpha})`;
-          ctx.fill();
+
+          if (p.isTiny) {
+            ctx.fillStyle = `rgba(235, 245, 240, ${p.alpha})`;
+            ctx.fillRect(-p.size / 2, -p.size / 2, p.size, p.size);
+          } else {
+            // Efecto 3D sutil al rotar cada fragmento triangular
+            const scaleY = Math.cos(p.tilt) * 0.7 + 0.3;
+            ctx.scale(1, scaleY);
+            ctx.beginPath();
+            ctx.moveTo(0, -p.size);
+            ctx.lineTo(p.size * 0.86, p.size * 0.75);
+            ctx.lineTo(-p.size * 0.86, p.size * 0.75);
+            ctx.closePath();
+            ctx.fillStyle = `rgba(228, 236, 232, ${p.alpha})`;
+            ctx.fill();
+          }
+
           ctx.restore();
-        });
+        }
 
         requestAnimationFrame(animate);
       }
@@ -775,15 +783,12 @@
       });
 
       heroDots.forEach((dot, idx) => {
-        if (idx === activeHeroIndex) {
-          dot.className = 'hero-dot w-6 h-2 rounded-full bg-white transition-all';
-        } else {
-          dot.className = 'hero-dot w-2 h-2 rounded-full bg-zinc-600 transition-all';
-        }
+        dot.className = idx === activeHeroIndex
+          ? 'hero-dot w-6 h-2 rounded-full bg-white transition-all'
+          : 'hero-dot w-2 h-2 rounded-full bg-zinc-600 transition-all';
       });
     }
 
-    // Soporte táctil para deslizar las 3 imágenes en el celular
     const heroStage = document.getElementById('heroSliderStage');
     let heroStartX = 0;
     heroStage.addEventListener('touchstart', e => {
@@ -798,7 +803,7 @@
       }
     }, { passive: true });
 
-    /* 3. Isla Interactiva + Carrusel de Sectores (Consultorios / Barberos / Negocios) */
+    /* 3. Isla Interactiva + Carrusel de Sectores */
     let activeSectorIndex = 0;
     const islandPill = document.getElementById('islandPill');
     const islandBtns = document.querySelectorAll('.island-btn');
@@ -822,7 +827,6 @@
       });
     }
 
-    // Soporte táctil para el carrusel de sectores
     const sectorCarousel = document.getElementById('sectorCarousel');
     let sectorStartX = 0;
     sectorCarousel.addEventListener('touchstart', e => {
@@ -837,7 +841,7 @@
       }
     }, { passive: true });
 
-    /* 4. Animación de Aparición al Bajar por la Página (Scroll Reveal como en Video 2) */
+    /* 4. Animación Scroll Reveal */
     const revealElements = document.querySelectorAll('.reveal-on-scroll');
     const revealObserver = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
@@ -853,7 +857,7 @@
     revealElements.forEach(el => revealObserver.observe(el));
 
     /* 5. Botón de WhatsApp (sin número por ahora) */
-    const phoneNumber = ''; // Cuando tengas el número, colocalo aquí (ej: '5493388123456')
+    const phoneNumber = '';
     function handleWhatsAppClick() {
       if (phoneNumber.trim() !== '') {
         const msg = encodeURIComponent('Hola LanzaWebs! Quiero consultar por el diseño de una página web.');
