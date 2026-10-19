@@ -43,42 +43,6 @@
       -moz-osx-font-smoothing: grayscale;
     }
 
-    /* Lámina borrosa que permite hacer scroll pero no ver ni clickear lo que hay detrás */
-    .launch-frosted-sheet {
-      position: fixed;
-      inset: 0;
-      z-index: 9999;
-      background-color: rgba(0, 0, 0, 0.58);
-      backdrop-filter: blur(28px) saturate(120%);
-      -webkit-backdrop-filter: blur(28px) saturate(120%);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 24px;
-      pointer-events: none;
-      transition: opacity 0.5s ease;
-    }
-
-    body.launch-blur-active main,
-    body.launch-blur-active header,
-    body.launch-blur-active footer,
-    body.launch-blur-active #waFloatingBtn {
-      pointer-events: none;
-      user-select: none;
-    }
-
-    .launch-blue-glow-card {
-      pointer-events: auto;
-      background: #040406;
-      border-radius: 32px;
-      border: 1px solid rgba(59, 130, 246, 0.38);
-      box-shadow:
-        0 0 28px -2px rgba(59, 130, 246, 0.25),
-        0 0 65px -10px rgba(37, 99, 235, 0.2),
-        0 25px 60px rgba(0, 0, 0, 0.95),
-        inset 0 0 18px rgba(59, 130, 246, 0.08);
-    }
-
     /* Jerarquía Tipográfica */
     .font-title-serif {
       font-family: var(--font-serif);
@@ -230,7 +194,7 @@
       border-color: rgba(255, 255, 255, 0.34);
     }
 
-    /* Tarjetas laterales un poquitito más notorias que antes */
+    /* Tarjetas laterales un poquitito más notorias */
     .slide-card.pos-left {
       transform: translate3d(-86px, 0, 0) scale(0.85) rotate(0deg);
       z-index: 15;
@@ -352,59 +316,7 @@
     }
   </style>
 </head>
-<body class="bg-black text-[#f5f5f7] selection:bg-emerald-500 selection:text-black launch-blur-active">
-
-  <!-- ===================================================================== -->
-  <!-- LÁMINA BORROSA + CARTEL CON ACCESO POR CONTRASEÑA (0404)              -->
-  <!-- ===================================================================== -->
-  <div id="launchOverlay" class="launch-frosted-sheet select-none">
-    <div class="launch-blue-glow-card relative max-w-md w-full p-8 sm:p-10 text-center">
-      <!-- Marca Superior (Tocá 3 veces seguidas aquí para ingresar la clave) -->
-      <div id="secretUnlockBtn" class="inline-flex items-center justify-center px-4 py-1.5 rounded-full bg-white/[0.04] border border-blue-400/20 mb-6 cursor-pointer">
-        <span class="font-bold tracking-tight text-sm text-white">LanzaWebs</span>
-      </div>
-
-      <!-- Indicador con destello azul -->
-      <div class="flex items-center justify-center gap-2 mb-4">
-        <span class="relative flex h-2 w-2">
-          <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"></span>
-          <span class="relative inline-flex rounded-full h-2 w-2 bg-blue-500"></span>
-        </span>
-        <span class="text-[11px] font-bold uppercase tracking-widest text-blue-400">Próximo lanzamiento</span>
-      </div>
-
-      <!-- Título Principal -->
-      <h2 class="font-heading-sans text-white text-3xl sm:text-4xl leading-tight tracking-tight uppercase mb-3">
-        SE LANZA EL LUNES 08:00AM
-      </h2>
-
-      <p class="font-body-sans text-[#8e8e93] text-sm sm:text-base leading-relaxed mb-6">
-        Estamos ultimando los detalles de nuestra página web. Volvé a ingresar el lunes a las 08:00 hs.
-      </p>
-
-      <!-- Panel Oculto para ingresar la clave (0404) -->
-      <div id="passwordPanel" class="hidden pt-4 border-t border-white/10 space-y-3">
-        <p class="text-xs font-bold text-zinc-400 uppercase tracking-wider">Acceso exclusivo desarrollador</p>
-        <div class="flex gap-2">
-          <input 
-            type="password" 
-            id="accessPinInput" 
-            maxlength="4" 
-            placeholder="••••" 
-            class="w-full bg-black/80 border border-white/20 rounded-xl px-4 py-2.5 text-center text-white tracking-widest text-lg focus:outline-none focus:border-blue-500 transition"
-          />
-          <button 
-            type="button" 
-            onclick="verifyPin()" 
-            class="bg-blue-600 hover:bg-blue-500 text-white font-bold px-5 py-2.5 rounded-xl transition text-sm shrink-0"
-          >
-            Entrar
-          </button>
-        </div>
-        <p id="pinErrorMsg" class="text-[11px] text-red-400 hidden">Clave incorrecta. Intentá de nuevo.</p>
-      </div>
-    </div>
-  </div>
+<body class="bg-black text-[#f5f5f7] selection:bg-emerald-500 selection:text-black">
 
   <!-- Barra de Navegación Adaptable -->
   <header class="sticky top-0 z-50 backdrop-blur-xl bg-black/85 border-b border-white/[0.08]">
@@ -445,7 +357,7 @@
       </p>
     </div>
 
-    <!-- SECCIÓN PROYECTOS (Con línea finita debajo del título y barra "VER PAGINA" arriba) -->
+    <!-- SECCIÓN PROYECTOS -->
     <section id="proyectos" class="mt-12 sm:mt-16 reveal-on-scroll" aria-label="Galería de proyectos">
       <div class="mb-8 text-left">
         <h2 class="font-heading-sans text-white text-2xl sm:text-3xl tracking-tight uppercase pb-3.5 border-b border-white/15">
@@ -457,7 +369,6 @@
 
         <!-- PROYECTO 1: EPFAR | Pagina Oficial -->
         <div class="slide-card pos-center" data-index="0" onclick="handleCardClick(0, 'https://epfar.netlify.app/')">
-          <!-- Línea ancha blanca ARRIBA: "VER PAGINA" -->
           <a
             href="https://epfar.netlify.app/"
             target="_blank"
@@ -469,8 +380,8 @@
           </a>
           <div class="slide-card-img-wrapper">
             <img
-              src="FOTO EPFAR.PNG"
-              onerror="if(this.src.endsWith('FOTO%20EPFAR.PNG')) this.src='FOTO EPFAR.png';"
+              src="FOTO EPFAR.jpg"
+              onerror="if(this.src.endsWith('FOTO%20EPFAR.jpg')) this.src='FOTO EPFAR.JPG';"
               alt="EPFAR | Pagina Oficial"
             />
           </div>
@@ -478,7 +389,6 @@
 
         <!-- PROYECTO 2: Carla Portillo Psicologa -->
         <div class="slide-card pos-right" data-index="1" onclick="handleCardClick(1, 'https://carlaportillo.netlify.app/')">
-          <!-- Línea ancha blanca ARRIBA: "VER PAGINA" -->
           <a
             href="https://carlaportillo.netlify.app/"
             target="_blank"
@@ -490,8 +400,8 @@
           </a>
           <div class="slide-card-img-wrapper">
             <img
-              src="FOTO PSICOLOGA.PNG"
-              onerror="if(this.src.endsWith('FOTO%20PSICOLOGA.PNG')) this.src='FOTO PSICOLOGA.png';"
+              src="FOTO PSICOLOGS.jpg"
+              onerror="if(this.src.endsWith('FOTO%20PSICOLOGS.jpg')) this.src='FOTO PSICOLOGS.JPG';"
               alt="Carla Portillo Psicologa"
             />
           </div>
@@ -499,9 +409,8 @@
 
         <!-- PROYECTO 3: En proceso... -->
         <div class="slide-card pos-left" data-index="2" onclick="handleCardClick(2, '')">
-          <!-- Línea ancha blanca ARRIBA: "EN PROCESO..." -->
           <div class="w-full bg-white text-black font-heading-sans text-xs tracking-widest uppercase py-3.5 px-4 flex items-center justify-center shrink-0 border-b border-black/10">
-            EN PROCESO...
+            EN PROCESO…
           </div>
           <div class="slide-card-img-wrapper flex flex-col items-center justify-center p-6 text-center bg-gradient-to-b from-[#141418] to-[#09090b]">
             <div class="w-12 h-12 rounded-full border border-white/15 bg-white/5 flex items-center justify-center mb-4">
@@ -538,7 +447,7 @@
       </p>
     </div>
 
-    <!-- Botones de Acción EN LA MISMA LÍNEA ("Quiero mi web" + "NUESTRA FORMA DE TRABAJAR ↗" al lado) -->
+    <!-- Botones de Acción EN LA MISMA LÍNEA -->
     <div class="mt-7 flex flex-row items-center justify-start gap-3.5 sm:gap-6 flex-nowrap reveal-on-scroll">
       <button
         type="button"
@@ -1007,17 +916,15 @@
   </main>
 
   <!-- ===================================================================== -->
-  <!-- PIE DE PÁGINA (Con byLanzaWebs compacto a un costadito a la derecha)  -->
+  <!-- PIE DE PÁGINA                                                         -->
   <!-- ===================================================================== -->
   <footer class="border-t border-white/10 bg-[#050811] py-10 px-6">
     <div class="max-w-xl md:max-w-3xl lg:max-w-4xl mx-auto flex flex-col items-center text-center space-y-5">
 
-      <!-- Descripción alineada -->
       <p class="font-body-sans text-[#9ca3af] text-sm sm:text-base max-w-lg leading-relaxed">
         Desarrollo de Páginas Web, Landing Pages y Tiendas Online a medida.
       </p>
 
-      <!-- Línea divisoria e información inferior con byLanzaWebs al costadito derecho -->
       <div class="w-full border-t border-white/10 pt-5 space-y-3 text-xs text-[#8e8e93]">
         <p class="text-zinc-300 font-medium text-center">
           © 2026 LanzaWebs · Estudio de Diseño Web y Branding · Santa Regina, Argentina
@@ -1028,7 +935,6 @@
             Terminos y Condiciones
           </a>
 
-          <!-- Emblema byLanzaWebs compacto al costado derecho -->
           <a href="#" class="sm:absolute sm:right-0 inline-flex items-center gap-1.5 group select-none text-[#e5e7eb] hover:text-white transition">
             <div class="flex items-baseline tracking-tight">
               <span class="text-[11px] font-extrabold mr-0.5">by</span>
@@ -1065,65 +971,6 @@
 
   <!-- SCRIPTS INTERACTIVOS -->
   <script>
-    /* 0. Control del Cartel con Clave (0404) */
-    const CARTEL_ACTIVO = true; // Cambiar a false cuando quieras dejarla abierta al público
-
-    function unlockSite() {
-      const overlay = document.getElementById('launchOverlay');
-      if (!overlay) return;
-      overlay.style.opacity = '0';
-      document.body.classList.remove('launch-blur-active');
-      setTimeout(() => { overlay.style.display = 'none'; }, 500);
-    }
-
-    (function initLaunchOverlay() {
-      const overlay = document.getElementById('launchOverlay');
-      const secretBtn = document.getElementById('secretUnlockBtn');
-      const passwordPanel = document.getElementById('passwordPanel');
-      if (!overlay) return;
-
-      if (!CARTEL_ACTIVO) {
-        overlay.style.display = 'none';
-        document.body.classList.remove('launch-blur-active');
-        return;
-      }
-
-      let tapCount = 0;
-      let tapTimer = null;
-      secretBtn.addEventListener('click', () => {
-        tapCount++;
-        clearTimeout(tapTimer);
-        if (tapCount >= 3) {
-          passwordPanel.classList.remove('hidden');
-          document.getElementById('accessPinInput').focus();
-          tapCount = 0;
-        } else {
-          tapTimer = setTimeout(() => { tapCount = 0; }, 900);
-        }
-      });
-    })();
-
-    function verifyPin() {
-      const input = document.getElementById('accessPinInput');
-      const errorMsg = document.getElementById('pinErrorMsg');
-      if (input.value === '0404') {
-        unlockSite();
-      } else {
-        errorMsg.classList.remove('hidden');
-        input.value = '';
-        input.focus();
-      }
-    }
-
-    document.addEventListener('DOMContentLoaded', () => {
-      const pinInput = document.getElementById('accessPinInput');
-      if (pinInput) {
-        pinInput.addEventListener('keypress', (e) => {
-          if (e.key === 'Enter') verifyPin();
-        });
-      }
-    });
-
     /* 1. Efecto de Bajada Muy Despacito para "NUESTRA FORMA DE TRABAJAR" */
     function slowScrollTo(event, targetId) {
       if (event) event.preventDefault();
