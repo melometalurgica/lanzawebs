@@ -163,7 +163,7 @@
       padding: 4px 8px;
     }
 
-    /* DESLIZADOR DE PROYECTOS: Ventana central grande con imágenes originales nítidas */
+    /* DESLIZADOR DE PROYECTOS */
     .cards-stage {
       position: relative;
       width: 100%;
@@ -183,7 +183,7 @@
       border-radius: 24px;
       overflow: hidden;
       background: #0d0d0f;
-      border: 1px solid rgba(255, 255, 255, 0.16);
+      border: 1px solid rgba(255, 255, 255, 0.18);
       box-shadow: 0 28px 60px -12px rgba(0, 0, 0, 0.95);
       transition: all 0.6s cubic-bezier(0.22, 1, 0.36, 1);
       cursor: pointer;
@@ -227,30 +227,30 @@
       z-index: 30;
       opacity: 1;
       filter: brightness(1);
-      border-color: rgba(255, 255, 255, 0.32);
+      border-color: rgba(255, 255, 255, 0.34);
     }
 
-    /* Tarjetas traseras mucho menos notorias */
+    /* Tarjetas laterales un poquitito más notorias que antes */
     .slide-card.pos-left {
-      transform: translate3d(-78px, 0, 0) scale(0.84) rotate(0deg);
+      transform: translate3d(-86px, 0, 0) scale(0.85) rotate(0deg);
       z-index: 15;
-      opacity: 0.22;
-      filter: brightness(0.35) blur(1px);
+      opacity: 0.36;
+      filter: brightness(0.48) blur(0.4px);
     }
 
     .slide-card.pos-right {
-      transform: translate3d(78px, 0, 0) scale(0.84) rotate(0deg);
+      transform: translate3d(86px, 0, 0) scale(0.85) rotate(0deg);
       z-index: 15;
-      opacity: 0.22;
-      filter: brightness(0.35) blur(1px);
+      opacity: 0.36;
+      filter: brightness(0.48) blur(0.4px);
     }
 
     @media (min-width: 640px) {
       .slide-card.pos-left {
-        transform: translate3d(-115px, 0, 0) scale(0.84) rotate(0deg);
+        transform: translate3d(-124px, 0, 0) scale(0.85) rotate(0deg);
       }
       .slide-card.pos-right {
-        transform: translate3d(115px, 0, 0) scale(0.84) rotate(0deg);
+        transform: translate3d(124px, 0, 0) scale(0.85) rotate(0deg);
       }
     }
 
@@ -445,18 +445,28 @@
       </p>
     </div>
 
-    <!-- SECCIÓN PROYECTOS (Con imágenes originales FOTO EPFAR.PNG y FOTO PSICOLOGA.PNG) -->
+    <!-- SECCIÓN PROYECTOS (Con línea finita debajo del título y barra "VER PAGINA" arriba) -->
     <section id="proyectos" class="mt-12 sm:mt-16 reveal-on-scroll" aria-label="Galería de proyectos">
-      <div class="mb-6 text-left md:text-center">
-        <h2 class="font-heading-sans text-white text-2xl sm:text-3xl tracking-tight uppercase">
+      <div class="mb-8 text-left">
+        <h2 class="font-heading-sans text-white text-2xl sm:text-3xl tracking-tight uppercase pb-3.5 border-b border-white/15">
           PROYECTOS
         </h2>
       </div>
 
       <div class="cards-stage" id="heroSliderStage">
 
-        <!-- PROYECTO 1: EPFAR | Pagina Oficial (Imagen original FOTO EPFAR.PNG) -->
-        <div class="slide-card pos-center" data-index="0" onclick="selectHeroSlide(0)">
+        <!-- PROYECTO 1: EPFAR | Pagina Oficial -->
+        <div class="slide-card pos-center" data-index="0" onclick="handleCardClick(0, 'https://epfar.netlify.app/')">
+          <!-- Línea ancha blanca ARRIBA: "VER PAGINA" -->
+          <a
+            href="https://epfar.netlify.app/"
+            target="_blank"
+            rel="noopener noreferrer"
+            onclick="event.stopPropagation()"
+            class="w-full bg-white text-black font-heading-sans text-xs tracking-widest uppercase py-3.5 px-4 flex items-center justify-center hover:bg-zinc-200 transition shrink-0 border-b border-black/10"
+          >
+            VER PAGINA
+          </a>
           <div class="slide-card-img-wrapper">
             <img
               src="FOTO EPFAR.PNG"
@@ -464,20 +474,20 @@
               alt="EPFAR | Pagina Oficial"
             />
           </div>
-          <!-- Línea ancha inferior: "VER PAGINA" sin flecha -->
+        </div>
+
+        <!-- PROYECTO 2: Carla Portillo Psicologa -->
+        <div class="slide-card pos-right" data-index="1" onclick="handleCardClick(1, 'https://carlaportillo.netlify.app/')">
+          <!-- Línea ancha blanca ARRIBA: "VER PAGINA" -->
           <a
-            href="https://epfar.netlify.app"
+            href="https://carlaportillo.netlify.app/"
             target="_blank"
             rel="noopener noreferrer"
             onclick="event.stopPropagation()"
-            class="w-full bg-white text-black font-heading-sans text-xs tracking-widest uppercase py-3.5 px-4 flex items-center justify-center hover:bg-zinc-200 transition shrink-0 border-t border-black/10"
+            class="w-full bg-white text-black font-heading-sans text-xs tracking-widest uppercase py-3.5 px-4 flex items-center justify-center hover:bg-zinc-200 transition shrink-0 border-b border-black/10"
           >
             VER PAGINA
           </a>
-        </div>
-
-        <!-- PROYECTO 2: Carla Portillo Psicologa (Imagen original FOTO PSICOLOGA.PNG) -->
-        <div class="slide-card pos-right" data-index="1" onclick="selectHeroSlide(1)">
           <div class="slide-card-img-wrapper">
             <img
               src="FOTO PSICOLOGA.PNG"
@@ -485,39 +495,30 @@
               alt="Carla Portillo Psicologa"
             />
           </div>
-          <!-- Línea ancha inferior: "VER PAGINA" sin flecha -->
-          <a
-            href="https://carlaportillo.netlify.app"
-            target="_blank"
-            rel="noopener noreferrer"
-            onclick="event.stopPropagation()"
-            class="w-full bg-white text-black font-heading-sans text-xs tracking-widest uppercase py-3.5 px-4 flex items-center justify-center hover:bg-zinc-200 transition shrink-0 border-t border-black/10"
-          >
-            VER PAGINA
-          </a>
         </div>
 
-        <!-- PROYECTO 3 (Complemento de galería en 3 capas) -->
-        <div class="slide-card pos-left" data-index="2" onclick="selectHeroSlide(2)">
-          <div class="slide-card-img-wrapper">
-            <img
-              src="https://images.unsplash.com/photo-1585747860715-2ba37e788b70?auto=format&fit=crop&w=900&q=85"
-              alt="Sitios Web para Barberías y Negocios"
-            />
+        <!-- PROYECTO 3: En proceso... -->
+        <div class="slide-card pos-left" data-index="2" onclick="handleCardClick(2, '')">
+          <!-- Línea ancha blanca ARRIBA: "EN PROCESO..." -->
+          <div class="w-full bg-white text-black font-heading-sans text-xs tracking-widest uppercase py-3.5 px-4 flex items-center justify-center shrink-0 border-b border-black/10">
+            EN PROCESO...
           </div>
-          <!-- Línea ancha inferior: "VER PAGINA" sin flecha -->
-          <a
-            href="#sectores"
-            onclick="event.stopPropagation()"
-            class="w-full bg-white text-black font-heading-sans text-xs tracking-widest uppercase py-3.5 px-4 flex items-center justify-center hover:bg-zinc-200 transition shrink-0 border-t border-black/10"
-          >
-            VER PAGINA
-          </a>
+          <div class="slide-card-img-wrapper flex flex-col items-center justify-center p-6 text-center bg-gradient-to-b from-[#141418] to-[#09090b]">
+            <div class="w-12 h-12 rounded-full border border-white/15 bg-white/5 flex items-center justify-center mb-4">
+              <span class="w-2.5 h-2.5 rounded-full bg-amber-400 animate-pulse"></span>
+            </div>
+            <p class="font-title-serif text-white text-2xl font-bold tracking-tight mb-2">
+              En proceso…
+            </p>
+            <p class="font-body-sans text-[#8e8e93] text-xs leading-relaxed max-w-[180px]">
+              Próximo desarrollo web de LanzaWebs en preparación.
+            </p>
+          </div>
         </div>
 
       </div>
 
-      <!-- Nombre del proyecto e indicadores (Sin el botón oscuro "VER PAGINA ↗" repetido abajo) -->
+      <!-- Nombre del proyecto e indicadores -->
       <div class="max-w-xs mx-auto mt-5 flex items-center justify-between px-2">
         <span id="activeProjectTitle" class="text-xs sm:text-sm font-bold text-white tracking-wide uppercase">
           1. EPFAR | Pagina Oficial
@@ -1006,8 +1007,7 @@
   </main>
 
   <!-- ===================================================================== -->
-  <!-- PIE DE PÁGINA (Sin el byLanzaWebs gigante arriba; ubicado chiquito    -->
-  <!-- a un costado abajo a la derecha como marcaste en la captura)          -->
+  <!-- PIE DE PÁGINA (Con byLanzaWebs compacto a un costadito a la derecha)  -->
   <!-- ===================================================================== -->
   <footer class="border-t border-white/10 bg-[#050811] py-10 px-6">
     <div class="max-w-xl md:max-w-3xl lg:max-w-4xl mx-auto flex flex-col items-center text-center space-y-5">
@@ -1023,7 +1023,6 @@
           © 2026 LanzaWebs · Estudio de Diseño Web y Branding · Santa Regina, Argentina
         </p>
 
-        <!-- Fila inferior: Términos y Condiciones + byLanzaWebs a un costadito a la derecha -->
         <div class="relative flex items-center justify-between sm:justify-center pt-1">
           <a href="#seguridad" class="hover:text-white underline underline-offset-4 transition">
             Terminos y Condiciones
@@ -1251,7 +1250,7 @@
       animate();
     })();
 
-    /* 3. Deslizador de Proyectos con imágenes originales */
+    /* 3. Deslizador de Proyectos */
     let activeHeroIndex = 0;
     const heroCards = document.querySelectorAll('#heroSliderStage .slide-card');
     const heroDots = document.querySelectorAll('.hero-dot');
@@ -1260,8 +1259,16 @@
     const projectsMeta = [
       { title: '1. EPFAR | Pagina Oficial' },
       { title: '2. Carla Portillo Psicologa' },
-      { title: '3. Barberías & Negocios' }
+      { title: '3. En proceso…' }
     ];
+
+    function handleCardClick(index, url) {
+      if (activeHeroIndex !== index) {
+        selectHeroSlide(index);
+      } else if (url) {
+        window.open(url, '_blank');
+      }
+    }
 
     function selectHeroSlide(index) {
       activeHeroIndex = (index + 3) % 3;
