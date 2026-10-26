@@ -3,27 +3,62 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0" />
-  <title>LanzaWebs — Desarrollo Web, Branding y Software</title>
-  <meta name="description" content="Somos LanzaWebs. Una agencia de desarrollo web y branding, también brindamos software." />
+  <title>LanzaWebs — Desarrollo web a medida para tu negocio</title>
+  <meta name="description" content="Desarrollo web hecho a medida para tu negocio: páginas web, tiendas online, software para consultorios y branding. Webs rápidas, pensadas para el celular y para recibir consultas por WhatsApp." />
+  <!-- Color de la barra del navegador en el celular (cambia a negro al hacer scroll) -->
+  <meta name="theme-color" content="#ffffff" />
 
-  <!-- Google Fonts: Únicamente 2 familias en Contraste Total (Playfair Display + Lato) -->
+  <!-- Vista previa al compartir el link (WhatsApp, Instagram, Facebook) -->
+  <meta property="og:type" content="website" />
+  <meta property="og:locale" content="es_AR" />
+  <meta property="og:site_name" content="LanzaWebs" />
+  <meta property="og:title" content="LanzaWebs — Desarrollo web a medida para tu negocio" />
+  <meta property="og:description" content="Páginas web a medida, tiendas online, software para consultorios y branding." />
+  <!-- Cuando tengas la imagen para compartir (1200 × 630 px), subila y descomentá esta línea:
+  <meta property="og:image" content="https://www.lanzawebs.com/og-lanzawebs.jpg" /> -->
+
+  <!-- Google Fonts: una sola familia (Inter Tight) con itálica para "a medida" -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700;900&family=Playfair+Display:ital,wght@0,700;0,800;0,900;1,600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter+Tight:ital,wght@0,300..900;1,300..600&display=swap" rel="stylesheet">
 
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
 
+  <script>
+    /* Marca que hay JavaScript: si algo falla, el contenido igual se ve */
+    document.documentElement.classList.add('js');
+
+    /* Si una foto de proyecto no carga: prueba con .JPG en mayúsculas y, si tampoco, muestra un recuadro prolijo */
+    function projectImgFallback(img) {
+      if (!img.dataset.retried) {
+        img.dataset.retried = '1';
+        img.src = img.getAttribute('src').replace(/\.jpg$/i, function (ext) { return ext === '.jpg' ? '.JPG' : '.jpg'; });
+        return;
+      }
+      img.onerror = null;
+      var box = document.createElement('div');
+      box.className = 'img-fallback';
+      box.innerHTML = '<strong></strong><span>Vista previa del proyecto</span>';
+      box.querySelector('strong').textContent = img.alt || 'Proyecto';
+      img.replaceWith(box);
+    }
+  </script>
+
   <style>
     :root {
+      --ink: #0a0a0a;
+      --ink-muted: #8b8b91;
       --bg-black: #000000;
       --card-dark: #121214;
       --text-white: #f5f5f7;
       --text-gray: #8e8e93;
       --apple-yellow: #ffd60a;
       --accent-green: #22c55e;
-      --font-serif: 'Playfair Display', Georgia, serif;
-      --font-sans: 'Lato', -apple-system, BlinkMacSystemFont, sans-serif;
+      --accent-orange: #ff5b1f;
+      --font-sans: 'Inter Tight', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+      --header-h: 64px;
     }
 
     * {
@@ -31,8 +66,17 @@
       -webkit-tap-highlight-color: transparent;
     }
 
+    /* El fondo de la página acompaña al scroll: blanco arriba, negro abajo
+       (así el "rebote" del iPhone nunca muestra el color equivocado) */
+    html { background-color: #ffffff; scroll-padding-top: 80px; }
+    html.is-dark { background-color: #000000; }
+    html.menu-open { overflow: hidden; }
+
+    /* Evita que el celular "se corra" hacia los costados (las tarjetas laterales
+       del deslizador sobresalían unos píxeles) sin cortar el círculo negro */
+    #main { overflow-x: clip; }
+
     body {
-      background-color: var(--bg-black);
       color: var(--text-white);
       font-family: var(--font-sans);
       font-weight: 400;
@@ -43,15 +87,17 @@
       -moz-osx-font-smoothing: grayscale;
     }
 
-    /* Jerarquía Tipográfica */
-    .font-title-serif {
-      font-family: var(--font-serif);
+    /* Jerarquía tipográfica (una sola familia) */
+    .font-display {
+      font-family: var(--font-sans);
+      font-weight: 600;
+      letter-spacing: -0.03em;
     }
 
     .font-heading-sans {
       font-family: var(--font-sans);
-      font-weight: 900;
-      letter-spacing: -0.02em;
+      font-weight: 800;
+      letter-spacing: -0.025em;
     }
 
     .font-body-sans {
@@ -60,71 +106,601 @@
       letter-spacing: -0.005em;
     }
 
-    /* ESCENARIO "Diseño web" */
-    .hero-visual-stage {
-      position: relative;
+    /* ===================================================================
+       HEADER — claro sobre el home blanco, oscuro sobre la zona negra
+       =================================================================== */
+    .site-header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 50;
+      color: var(--ink);
+      border-bottom: 1px solid transparent;
+      transition:
+        transform 0.5s var(--ease-out),
+        background-color 0.35s ease,
+        color 0.35s ease,
+        border-color 0.35s ease;
+    }
+
+    .site-header.is-scrolled {
+      background-color: rgba(255, 255, 255, 0.74);
+      -webkit-backdrop-filter: saturate(180%) blur(18px);
+      backdrop-filter: saturate(180%) blur(18px);
+      border-bottom-color: rgba(10, 10, 10, 0.06);
+    }
+
+    .site-header.is-dark { color: #ffffff; }
+
+    .site-header.is-dark.is-scrolled {
+      background-color: rgba(0, 0, 0, 0.6);
+      border-bottom-color: rgba(255, 255, 255, 0.08);
+    }
+
+    .site-header.is-hidden { transform: translateY(-101%); }
+
+    .site-header__inner {
+      max-width: 1080px;
+      height: var(--header-h);
+      margin: 0 auto;
+      padding: 0 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      font-size: 20px;
+      font-weight: 700;
+      letter-spacing: -0.035em;
+      line-height: 1;
+    }
+
+    .brand__mark {
+      width: 21px;
+      height: 21px;
+      border-radius: 9999px;
+      border: 1.6px solid currentColor;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      flex: none;
+    }
+
+    .brand__mark svg { width: 11px; height: 11px; }
+
+    .site-nav {
+      display: none;
+      align-items: center;
+      gap: 24px;
+      font-size: 13px;
+      font-weight: 500;
+    }
+
+    .site-nav a { opacity: 0.58; transition: opacity 0.2s ease; }
+    .site-nav a:hover { opacity: 1; }
+
+    .site-header__actions {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    button.header-cta {
+      display: none;
+      align-items: center;
+      height: 36px;
+      padding: 0 16px;
+      border-radius: 9999px;
+      font-size: 13px;
+      font-weight: 600;
+      white-space: nowrap;
+      background-color: var(--ink);
+      color: #ffffff;
+      transition: background-color 0.35s ease, color 0.35s ease, transform 0.2s ease;
+    }
+
+    button.header-cta:active { transform: scale(0.96); }
+    .site-header.is-dark button.header-cta { background-color: #ffffff; color: #000000; }
+
+    button.menu-toggle {
+      width: 40px;
+      height: 40px;
+      margin-right: -8px;
+      display: inline-flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+    }
+
+    .menu-toggle span {
+      display: block;
+      width: 22px;
+      height: 1.8px;
+      border-radius: 2px;
+      background-color: currentColor;
+      transition: transform 0.45s var(--ease-out);
+    }
+
+    .menu-toggle[aria-expanded="true"] span:first-child { transform: translateY(3.9px) rotate(45deg); }
+    .menu-toggle[aria-expanded="true"] span:last-child { transform: translateY(-3.9px) rotate(-45deg); }
+
+    @media (min-width: 360px) {
+      button.header-cta { display: inline-flex; }
+    }
+
+    @media (min-width: 640px) {
+      .site-header__inner { padding: 0 32px; }
+    }
+
+    @media (min-width: 900px) {
+      .site-nav { display: flex; }
+      button.menu-toggle { display: none; }
+    }
+
+    /* Menú móvil a pantalla completa */
+    .mobile-menu {
+      position: fixed;
+      inset: 0;
+      z-index: 45;
+      background-color: #000000;
+      color: #ffffff;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: calc(var(--header-h) + 24px) 24px 32px;
+      overflow-y: auto;
+      overscroll-behavior: contain;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.35s ease, visibility 0s linear 0.35s;
+    }
+
+    .mobile-menu.is-open {
+      opacity: 1;
+      visibility: visible;
+      transition: opacity 0.35s ease;
+    }
+
+    .mobile-menu__nav a {
+      display: flex;
+      align-items: baseline;
+      gap: 14px;
+      padding: 9px 0;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      font-size: clamp(30px, 9vw, 42px);
+      font-weight: 500;
+      letter-spacing: -0.04em;
+      line-height: 1.1;
+      opacity: 0;
+      transform: translateY(18px);
+      transition: opacity 0.5s ease, transform 0.6s var(--ease-out);
+    }
+
+    .mobile-menu__nav a small {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      color: #6e6e73;
+    }
+
+    .mobile-menu.is-open .mobile-menu__nav a { opacity: 1; transform: none; }
+    .mobile-menu.is-open .mobile-menu__nav a:nth-child(2) { transition-delay: 0.04s; }
+    .mobile-menu.is-open .mobile-menu__nav a:nth-child(3) { transition-delay: 0.08s; }
+    .mobile-menu.is-open .mobile-menu__nav a:nth-child(4) { transition-delay: 0.12s; }
+    .mobile-menu.is-open .mobile-menu__nav a:nth-child(5) { transition-delay: 0.16s; }
+    .mobile-menu.is-open .mobile-menu__nav a:nth-child(6) { transition-delay: 0.2s; }
+    .mobile-menu.is-open .mobile-menu__nav a:nth-child(7) { transition-delay: 0.24s; }
+
+    button.mobile-menu__cta {
       width: 100%;
-      height: 190px;
+      height: 54px;
+      border-radius: 9999px;
+      background-color: #ffffff;
+      color: #000000;
+      font-size: 16px;
+      font-weight: 700;
+    }
+
+    .mobile-menu__foot p {
+      margin-top: 12px;
+      text-align: center;
+      font-size: 13px;
+      color: #8e8e93;
+    }
+
+    @media (min-width: 900px) {
+      .mobile-menu { display: none; }
+    }
+
+    /* ===================================================================
+       HOME (blanco total)
+       =================================================================== */
+    .hero {
+      position: relative;
+      z-index: 1;
+      min-height: 100vh;
+      min-height: 100svh;
+      display: flex;
+      flex-direction: column;
+      padding-top: var(--header-h);
+      background-color: #ffffff;
+      color: var(--ink);
+      overflow: hidden;
+    }
+
+    .hero__inner {
+      position: relative;
+      flex: 1;
+      width: 100%;
+      max-width: 1080px;
+      margin: 0 auto;
+      padding: 0 20px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .hero__main { padding-top: clamp(48px, 9vh, 120px); }
+
+    /* Pastilla superior */
+    button.hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      height: 42px;
+      padding: 0 16px 0 6px;
+      border: 1.5px solid #e7e7ea;
+      border-radius: 9999px;
+      background-color: #ffffff;
+      color: var(--ink);
+      font-size: 14.5px;
+      font-weight: 500;
+      letter-spacing: -0.01em;
+      transition: border-color 0.25s ease;
+    }
+
+    button.hero-badge:hover { border-color: #c9c9cf; }
+
+    .hero-badge__icon {
+      width: 30px;
+      height: 30px;
+      border-radius: 9px;
+      border: 1px solid #ececef;
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--accent-orange);
+    }
+
+    .hero-badge__icon svg { width: 18px; height: 18px; animation: spin 14s linear infinite; }
+    .hero-badge__arrow { width: 14px; height: 14px; color: #6e6e73; }
+
+    /* Titular */
+    .hero-title {
+      margin-top: 20px;
+      font-size: clamp(2.4rem, 10.6vw, 5.6rem);
+      font-weight: 300;
+      line-height: 1;
+      letter-spacing: -0.035em;
+      color: var(--ink);
+    }
+
+    .hero-title .line {
+      display: block;
+      overflow: hidden;
+      padding-bottom: 0.12em;
+      margin-bottom: -0.12em;
+    }
+
+    .hero-title .line__in {
+      display: inline-block;
+      animation: lineUp 1.1s var(--ease-out) both;
+      animation-delay: calc(0.12s + var(--i, 0) * 0.09s);
+    }
+
+    .hero-title .muted { color: var(--ink-muted); }
+
+    .hero-title em {
+      font-style: italic;
+      font-weight: 300;
+      padding-right: 0.04em;
+    }
+
+    /* "LO QUE HACEMOS" + texto rotativo */
+    .hero-actions { margin-top: clamp(26px, 4.5vh, 48px); }
+
+    .eyebrow {
+      font-size: 12.5px;
+      font-weight: 400;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--ink-muted);
+    }
+
+    .rotator {
+      display: grid;
+      margin-top: 12px;
+    }
+
+    .rot-item {
+      grid-area: 1 / 1;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      font-size: clamp(16.5px, 4.5vw, 21px);
+      font-weight: 400;
+      letter-spacing: -0.02em;
+      line-height: 1.2;
+      color: var(--ink);
+      opacity: 0;
+      transform: translateY(14px);
+      transition: opacity 0.45s ease, transform 0.6s var(--ease-out);
+    }
+
+    .rot-item.is-active {
+      opacity: 1;
+      transform: translateY(0);
+      transition-delay: 0.18s;
+    }
+
+    .rot-item.is-leaving {
+      opacity: 0;
+      transform: translateY(-14px);
+      transition-duration: 0.35s, 0.45s;
+      transition-delay: 0s;
+    }
+
+    .rot-icon {
+      width: 32px;
+      height: 32px;
+      flex: none;
+      border: 1.6px solid var(--ink);
+      border-radius: 9px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .rot-icon svg { width: 17px; height: 17px; }
+
+    /* Botón pastilla "VER PROYECTOS" */
+    .hero-cta-row {
+      margin-top: clamp(30px, 5vh, 52px);
+      display: flex;
+      justify-content: center;
+    }
+
+    .pill-cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 22px;
+      height: 60px;
+      padding: 0 5px 0 30px;
+      border: 2px solid var(--ink);
+      border-radius: 9999px;
+      background-color: #ffffff;
+      color: var(--ink);
+      font-size: 13.5px;
+      font-weight: 500;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      white-space: nowrap;
+      transition: background-color 0.35s var(--ease-out), color 0.35s var(--ease-out);
+    }
+
+    .pill-cta__circle {
+      width: 46px;
+      height: 46px;
+      border-radius: 9999px;
+      background-color: var(--ink);
+      color: #ffffff;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      transition: transform 0.45s var(--ease-out), background-color 0.35s ease, color 0.35s ease;
+    }
+
+    .pill-cta__circle svg { width: 18px; height: 18px; }
+    .pill-cta:hover { background-color: var(--ink); color: #ffffff; }
+    .pill-cta:hover .pill-cta__circle { background-color: #ffffff; color: var(--ink); transform: rotate(45deg); }
+
+    /* Parte de abajo del home: logos de clientes + "Deslizá" */
+    .hero__bottom {
+      margin-top: auto;
+      padding-top: 32px;
+      padding-bottom: 14px;
+    }
+
+    .clients-label {
+      margin-bottom: 8px;
+      text-align: center;
+      font-size: 10.5px;
+      font-weight: 500;
+      letter-spacing: 0.26em;
+      text-transform: uppercase;
+      color: #a1a1a6;
+    }
+
+    .logo-marquee {
+      position: relative;
+      overflow: hidden;
+      -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 14%, #000 86%, transparent 100%);
+      mask-image: linear-gradient(90deg, transparent 0, #000 14%, #000 86%, transparent 100%);
+    }
+
+    .logo-track {
+      display: flex;
+      width: max-content;
+      animation: logoMarquee var(--marquee-duration, 28s) linear infinite;
+    }
+
+    .logo-marquee:hover .logo-track { animation-play-state: paused; }
+
+    .logo-group {
+      display: flex;
+      align-items: center;
+      gap: 60px;
+      padding-right: 60px;
+      flex: none;
+    }
+
+    .logo-item {
+      flex: none;
+      height: 48px;
       display: flex;
       align-items: center;
       justify-content: center;
-      overflow: hidden;
-      margin: 6px auto 4px auto;
+      color: var(--ink);
+      opacity: 0.5;
+      transition: opacity 0.3s ease;
+    }
+
+    .logo-item:hover { opacity: 1; }
+
+    /* Logos reales en imagen: siempre en blanco y negro */
+    .logo-item img {
+      height: 100%;
+      width: auto;
+      max-width: 150px;
+      object-fit: contain;
+      filter: grayscale(1) contrast(1.1);
+    }
+
+    /* Logotipos de texto (provisorios hasta tener los logos en imagen) */
+    .wordmark {
+      display: inline-flex;
+      flex-direction: column;
+      align-items: center;
+      line-height: 1;
+      white-space: nowrap;
+    }
+
+    .wordmark small {
+      display: block;
+      margin-top: 5px;
+      padding-left: 0.38em;
+      font-size: 8.5px;
+      font-weight: 600;
+      letter-spacing: 0.38em;
+      text-transform: uppercase;
+    }
+
+    .wm-epfar { font-size: 23px; font-weight: 900; font-style: italic; letter-spacing: 0.01em; }
+    .wm-carla { font-size: 19px; font-weight: 300; letter-spacing: -0.03em; }
+    .wm-melo { font-size: 21px; font-weight: 800; letter-spacing: 0.14em; padding-left: 0.14em; }
+
+    .scroll-hint {
+      width: max-content;
+      margin: 12px auto 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 7px;
+      font-size: 11.5px;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      color: var(--ink);
+    }
+
+    .pulse-bars {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 3px;
+    }
+
+    .pulse-bars i {
+      display: block;
+      height: 3px;
+      border-radius: 1px;
+      background-color: currentColor;
+      opacity: 0.15;
+      animation: barPulse 1.6s ease-in-out infinite;
+    }
+
+    .pulse-bars i:nth-child(1) { width: 8px; }
+    .pulse-bars i:nth-child(2) { width: 12px; animation-delay: 0.15s; }
+    .pulse-bars i:nth-child(3) { width: 16px; animation-delay: 0.3s; }
+    .pulse-bars i:nth-child(4) { width: 20px; animation-delay: 0.45s; }
+
+    /* Animaciones de entrada del home */
+    .anim-fade-up { animation: fadeUp 0.9s var(--ease-out) both; animation-delay: var(--d, 0s); }
+
+    @media (min-width: 640px) {
+      .hero__inner { padding: 0 32px; }
+      .logo-marquee { max-width: 760px; margin: 0 auto; }
     }
 
     @media (min-width: 768px) {
-      .hero-visual-stage {
-        height: 260px;
+      .hero-actions {
+        display: flex;
+        align-items: flex-end;
+        justify-content: space-between;
+        gap: 32px;
       }
+      .hero-cta-row { margin-top: 0; }
     }
 
-    .hero-green-glow {
-      position: absolute;
-      width: 90%;
-      height: 140px;
-      background: radial-gradient(
-        ellipse at 50% 50%,
-        rgba(18, 92, 58, 0.36) 0%,
-        rgba(10, 55, 35, 0.18) 45%,
-        rgba(0, 0, 0, 0) 78%
-      );
-      filter: blur(20px);
-      z-index: 1;
-      pointer-events: none;
-    }
-
-    #particlesCanvas {
-      position: absolute;
-      inset: 0;
-      width: 100%;
-      height: 100%;
-      z-index: 2;
-      pointer-events: none;
-    }
-
-    .hero-diseno-title {
+    /* ===================================================================
+       ZONA NEGRA + CÍRCULO QUE CRECE (blanco total → negro total)
+       =================================================================== */
+    .dark-zone {
       position: relative;
-      z-index: 3;
-      font-family: var(--font-serif);
+      z-index: 2;
+      background-color: #000000;
+      color: var(--text-white);
+    }
+
+    /* El "domo": se apoya en el borde superior de la zona negra y su radio
+       lo controla el scroll (ver script "2. Domo") */
+    .dome {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 100%;
+      height: 100vh;
+      height: 100lvh;
+      background-color: #000000;
+      -webkit-clip-path: circle(0px at 50% 100%);
+      clip-path: circle(0px at 50% 100%);
+      pointer-events: none;
+    }
+
+    .dark-content { padding-top: clamp(80px, 13vh, 140px); }
+
+    /* Intro de Proyectos (estilo de la referencia) */
+    .kicker {
+      font-size: 12px;
+      font-weight: 500;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: #8e8e93;
+    }
+
+    .mega {
+      margin-top: 14px;
+      font-size: clamp(2.6rem, 11.5vw, 5rem);
       font-weight: 800;
-      font-size: clamp(3.6rem, 15.5vw, 6.8rem);
-      line-height: 1;
-      letter-spacing: -0.035em;
-      white-space: nowrap;
-      text-align: center;
-      background: linear-gradient(
-        175deg,
-        #ffffff 0%,
-        #f4f4f6 30%,
-        #d4d4d8 62%,
-        #8e8e96 88%,
-        #d4d4d8 100%
-      );
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      filter: drop-shadow(0 10px 24px rgba(0, 0, 0, 0.92));
-      user-select: none;
-      padding: 4px 8px;
+      line-height: 0.92;
+      letter-spacing: -0.04em;
+      text-transform: uppercase;
+      color: #ffffff;
+    }
+
+    .lead {
+      margin-top: 22px;
+      max-width: 34rem;
+      font-size: clamp(16px, 4.2vw, 19px);
+      line-height: 1.6;
+      color: #a1a1a6;
     }
 
     /* DESLIZADOR DE PROYECTOS */
@@ -185,6 +761,22 @@
       image-rendering: -webkit-optimize-contrast;
     }
 
+    .img-fallback {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 24px;
+      text-align: center;
+      background: radial-gradient(120% 80% at 50% 0%, #1c1c20 0%, #09090b 70%);
+    }
+
+    .img-fallback strong { font-size: 22px; font-weight: 700; letter-spacing: -0.03em; color: #ffffff; }
+    .img-fallback span { font-size: 12px; color: #8e8e93; }
+
     /* Tarjeta central protagonista */
     .slide-card.pos-center {
       transform: translate3d(0, 0, 0) scale(1) rotate(0deg);
@@ -218,8 +810,8 @@
       }
     }
 
-    /* SCROLL REVEAL MAXIMIZADO */
-    .reveal-on-scroll {
+    /* SCROLL REVEAL MAXIMIZADO (solo si hay JavaScript) */
+    .js .reveal-on-scroll {
       opacity: 0;
       transform: translateY(42px) scale(0.985);
       filter: blur(6px);
@@ -230,7 +822,7 @@
       will-change: opacity, transform, filter;
     }
 
-    .reveal-on-scroll.is-visible {
+    .js .reveal-on-scroll.is-visible {
       opacity: 1;
       transform: translateY(0) scale(1);
       filter: blur(0);
@@ -259,6 +851,378 @@
 
     .faq-item.open .faq-icon {
       transform: rotate(45deg);
+    }
+
+    /* ===================================================================
+       PRECIOS — tarjetas de planes
+       Para cambiar un precio, editá el número dentro de .plan__price (en el HTML).
+       =================================================================== */
+    .plans {
+      display: grid;
+      gap: 26px;
+    }
+
+    @media (min-width: 1024px) {
+      .plans {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 14px;
+        align-items: stretch;
+      }
+    }
+
+    .plan {
+      --plan-accent: #34d399;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      padding: 30px 22px 22px;
+      border-radius: 28px;
+      background: linear-gradient(180deg, #151517 0%, #0c0c0e 100%);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      color: var(--text-white);
+    }
+
+    .plan--store { --plan-accent: #38bdf8; }
+
+    /* Plan destacado: tarjeta blanca */
+    .plan--featured {
+      --plan-accent: #16a34a;
+      background: #ffffff;
+      border-color: #ffffff;
+      color: var(--ink);
+      box-shadow: 0 24px 60px -32px rgba(255, 255, 255, 0.24);
+    }
+
+    .plan__badge {
+      position: absolute;
+      top: 0;
+      left: 22px;
+      transform: translateY(-50%);
+      display: inline-flex;
+      align-items: center;
+      height: 26px;
+      padding: 0 12px;
+      border-radius: 9999px;
+      background-color: var(--apple-yellow);
+      color: #000000;
+      font-size: 10.5px;
+      font-weight: 800;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+    }
+
+    .plan__body { flex: 1; }
+
+    .plan__label {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--plan-accent);
+    }
+
+    .plan--featured .plan__label { color: #71717a; }
+
+    .plan__name {
+      margin-top: 6px;
+      font-size: 27px;
+      font-weight: 800;
+      letter-spacing: -0.035em;
+      line-height: 1.05;
+    }
+
+    .plan__desc {
+      margin-top: 10px;
+      font-size: 14.5px;
+      line-height: 1.5;
+      color: #8e8e93;
+    }
+
+    .plan--featured .plan__desc { color: #52525b; }
+
+    .plan__pricing { margin-top: 22px; }
+
+    .plan__was {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 8px;
+      font-size: 15px;
+      color: #a1a1aa;
+    }
+
+    .plan__was s { text-decoration-thickness: 1.5px; }
+
+    .plan__save {
+      padding: 3px 9px;
+      border-radius: 9999px;
+      background-color: #dcfce7;
+      color: #15803d;
+      font-size: 11.5px;
+      font-weight: 700;
+    }
+
+    .plan__price {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: baseline;
+      column-gap: 7px;
+      font-size: clamp(38px, 10.5vw, 48px);
+      font-weight: 800;
+      letter-spacing: -0.05em;
+      line-height: 1;
+    }
+
+    .plan__price small {
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 0.02em;
+      color: #8e8e93;
+    }
+
+    @media (min-width: 1024px) {
+      .plan__price { font-size: 40px; }
+    }
+
+    /* "desde" va en su propia línea, arriba del número */
+    .plan__price .plan__from {
+      flex-basis: 100%;
+      margin-bottom: 6px;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+    }
+
+    .plan__note {
+      margin-top: 8px;
+      font-size: 12.5px;
+      color: #8e8e93;
+    }
+
+    .plan--featured .plan__price small,
+    .plan--featured .plan__note { color: #71717a; }
+
+    .plan__features {
+      margin: 22px 0 0;
+      padding: 20px 0 0;
+      list-style: none;
+      display: grid;
+      gap: 11px;
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .plan--featured .plan__features { border-top-color: rgba(0, 0, 0, 0.1); }
+
+    .plan__features li {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      font-size: 14.5px;
+      line-height: 1.42;
+    }
+
+    .plan__features svg {
+      flex: none;
+      width: 18px;
+      height: 18px;
+      margin-top: 1px;
+      color: var(--plan-accent);
+    }
+
+    /* Bonus que traen todos los planes */
+    .plan__bonus {
+      margin-top: 18px;
+      padding: 14px;
+      border-radius: 16px;
+      border: 1px dashed rgba(255, 255, 255, 0.18);
+      background-color: rgba(255, 255, 255, 0.04);
+    }
+
+    .plan--featured .plan__bonus {
+      border-color: rgba(0, 0, 0, 0.14);
+      background-color: #f4f4f5;
+    }
+
+    .plan__bonus-title {
+      font-size: 10.5px;
+      font-weight: 700;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: #8e8e93;
+    }
+
+    .plan__bonus ul {
+      margin: 10px 0 0;
+      padding: 0;
+      list-style: none;
+      display: grid;
+      gap: 8px;
+    }
+
+    .plan__bonus li {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 14px;
+      font-weight: 600;
+      line-height: 1.35;
+    }
+
+    .plan__bonus svg {
+      flex: none;
+      width: 18px;
+      height: 18px;
+      color: var(--apple-yellow);
+    }
+
+    .plan--featured .plan__bonus svg { color: #000000; }
+
+    .plan__extra {
+      margin-top: 14px;
+      font-size: 13px;
+      line-height: 1.5;
+      color: #8e8e93;
+    }
+
+    .plan__extra strong { color: #ffffff; font-weight: 700; }
+    .plan--featured .plan__extra { color: #52525b; }
+    .plan--featured .plan__extra strong { color: #000000; }
+
+    button.plan__cta {
+      margin-top: 22px;
+      width: 100%;
+      height: 52px;
+      border-radius: 9999px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      font-size: 15px;
+      font-weight: 700;
+      letter-spacing: -0.01em;
+      background-color: rgba(255, 255, 255, 0.1);
+      color: #ffffff;
+      transition: background-color 0.25s ease, color 0.25s ease, transform 0.2s ease;
+    }
+
+    button.plan__cta svg {
+      width: 16px;
+      height: 16px;
+      transition: transform 0.35s var(--ease-out);
+    }
+
+    button.plan__cta:hover { background-color: #ffffff; color: #000000; }
+    button.plan__cta:hover svg { transform: rotate(45deg); }
+    button.plan__cta:active { transform: scale(0.97); }
+    .plan--featured button.plan__cta { background-color: #000000; color: #ffffff; }
+    .plan--featured button.plan__cta:hover { background-color: #27272a; color: #ffffff; }
+
+    /* Condiciones */
+    .pricing-terms {
+      margin-top: 28px;
+      padding: 24px 22px;
+      border-radius: 24px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      background-color: #0b0b0d;
+    }
+
+    .pricing-terms__title {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: #8e8e93;
+    }
+
+    .pricing-terms ul {
+      margin: 16px 0 0;
+      padding: 0;
+      list-style: none;
+      display: grid;
+      gap: 14px;
+    }
+
+    .pricing-terms li {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      font-size: 14.5px;
+      line-height: 1.5;
+      color: #a1a1a6;
+    }
+
+    .pricing-terms li strong { color: #ffffff; font-weight: 700; }
+
+    .pricing-terms svg {
+      flex: none;
+      width: 20px;
+      height: 20px;
+      margin-top: 1px;
+      color: #ffffff;
+    }
+
+    @media (min-width: 768px) {
+      .pricing-terms ul {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 16px 28px;
+      }
+    }
+
+    /* Caja "¿No sabés cuál elegir?" */
+    .pricing-help {
+      margin-top: 16px;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 16px;
+      padding: 22px;
+      border-radius: 22px;
+      background-color: #ffffff;
+      color: #3f3f46;
+    }
+
+    .pricing-help p {
+      font-size: 15px;
+      line-height: 1.5;
+    }
+
+    .pricing-help strong { color: #000000; font-weight: 800; }
+
+    button.pricing-help__cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      height: 48px;
+      padding: 0 20px;
+      border-radius: 9999px;
+      background-color: #000000;
+      color: #ffffff;
+      font-size: 14.5px;
+      font-weight: 700;
+      white-space: nowrap;
+      transition: background-color 0.25s ease, transform 0.2s ease;
+    }
+
+    button.pricing-help__cta svg { width: 16px; height: 16px; }
+    button.pricing-help__cta:hover { background-color: #27272a; }
+    button.pricing-help__cta:active { transform: scale(0.97); }
+
+    @media (min-width: 640px) {
+      .pricing-help {
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+        gap: 24px;
+      }
+    }
+
+    .pricing-footnote {
+      margin-top: 14px;
+      text-align: center;
+      font-size: 12px;
+      color: #6e6e73;
     }
 
     /* Isla Interactiva */
@@ -314,605 +1278,923 @@
       padding: 34px 28px;
       box-shadow: 0 20px 50px rgba(0, 0, 0, 0.85);
     }
+
+    /* ===================================================================
+       BOTÓN FLOTANTE DE WHATSAPP
+       =================================================================== */
+    button.contact-badge {
+      position: fixed;
+      right: 18px;
+      bottom: 18px;
+      z-index: 40;
+      width: 58px;
+      height: 58px;
+      border-radius: 9999px;
+      background-color: #25d366;
+      color: #ffffff;
+      box-shadow: 0 10px 28px rgba(37, 211, 102, 0.4);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      animation: fadeIn 0.8s ease 1s both;
+      transition: transform 0.3s var(--ease-out);
+    }
+
+    button.contact-badge:hover { transform: scale(1.06); }
+    button.contact-badge:active { transform: scale(0.95); }
+    button.contact-badge svg { width: 30px; height: 30px; }
+
+    /* Keyframes */
+    @keyframes lineUp { from { transform: translateY(105%); } to { transform: translateY(0); } }
+    @keyframes fadeUp { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    @keyframes barPulse { 0%, 100% { opacity: 0.15; } 30% { opacity: 0.9; } }
+    @keyframes logoMarquee { from { transform: translate3d(0, 0, 0); } to { transform: translate3d(-50%, 0, 0); } }
+
+    /* Si la persona pidió "reducir movimiento" en su celular, se respeta */
+    @media (prefers-reduced-motion: reduce) {
+      .hero-title .line__in,
+      .anim-fade-up,
+      button.contact-badge { animation: none; }
+      .logo-track,
+      .hero-badge__icon svg,
+      .pulse-bars i { animation: none; }
+      .pulse-bars i { opacity: 0.6; }
+      .rot-item,
+      .rot-item.is-leaving { transform: none; }
+      .js .reveal-on-scroll { transform: none; filter: none; }
+    }
   </style>
 </head>
-<body class="bg-black text-[#f5f5f7] selection:bg-emerald-500 selection:text-black">
+<body class="text-[#f5f5f7] selection:bg-emerald-500 selection:text-black">
 
-  <!-- Barra de Navegación Adaptable -->
-  <header class="sticky top-0 z-50 backdrop-blur-xl bg-black/85 border-b border-white/[0.08]">
-    <div class="max-w-5xl mx-auto px-5 sm:px-8 h-16 flex items-center justify-between">
-      <a href="#" class="flex items-center">
-        <span class="font-bold tracking-tight text-[19px] text-white">LanzaWebs</span>
+  <!-- ===================================================================== -->
+  <!-- BARRA DE NAVEGACIÓN                                                   -->
+  <!-- ===================================================================== -->
+  <header id="siteHeader" class="site-header">
+    <div class="site-header__inner">
+      <a href="#inicio" class="brand" aria-label="LanzaWebs, volver al inicio">
+        <span>LanzaWebs</span>
+        <span class="brand__mark" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7M17 7H9M17 7v8" /></svg>
+        </span>
       </a>
 
-      <nav class="hidden md:flex items-center gap-7 text-xs font-bold uppercase tracking-wider text-zinc-400">
-        <a href="#proyectos" class="hover:text-white transition">Proyectos</a>
-        <a href="#beneficios" onclick="slowScrollTo(event, 'beneficios')" class="hover:text-white transition">Beneficios</a>
-        <a href="#proceso" class="hover:text-white transition">Proceso</a>
-        <a href="#preguntas" class="hover:text-white transition">Preguntas</a>
-        <a href="#seguridad" class="hover:text-white transition">Seguridad</a>
-        <a href="#sectores" class="hover:text-white transition">Sectores</a>
+      <nav class="site-nav" aria-label="Secciones">
+        <a href="#proyectos">Proyectos</a>
+        <a href="#beneficios">Beneficios</a>
+        <a href="#proceso">Proceso</a>
+        <a href="#preguntas">Preguntas</a>
+        <a href="#precios">Precios</a>
+        <a href="#seguridad">Seguridad</a>
+        <a href="#sectores">Sectores</a>
       </nav>
 
-      <button onclick="handleWhatsAppClick()" class="text-xs font-bold bg-white text-black px-4 py-2 rounded-full hover:bg-zinc-200 transition">
-        Quiero mi web
-      </button>
+      <div class="site-header__actions">
+        <button type="button" class="header-cta" onclick="handleWhatsAppClick()">Quiero mi web</button>
+        <button type="button" class="menu-toggle" id="menuToggle" aria-expanded="false" aria-controls="mobileMenu" aria-label="Abrir menú">
+          <span></span><span></span>
+        </button>
+      </div>
     </div>
   </header>
 
-  <!-- CONTENIDO PRINCIPAL ADAPTABLE -->
-  <main class="max-w-xl md:max-w-3xl lg:max-w-4xl mx-auto px-6 sm:px-8 pt-4 pb-20">
-
-    <!-- SECCIÓN 1: ENCABEZADO VISUAL "Diseño web" -->
-    <div class="hero-visual-stage reveal-on-scroll is-visible">
-      <div class="hero-green-glow"></div>
-      <canvas id="particlesCanvas"></canvas>
-      <h1 class="hero-diseno-title">Diseño web</h1>
+  <!-- Menú del celular -->
+  <div id="mobileMenu" class="mobile-menu" aria-hidden="true" inert>
+    <nav class="mobile-menu__nav" aria-label="Menú">
+      <a href="#proyectos"><small>01</small>Proyectos</a>
+      <a href="#beneficios"><small>02</small>Beneficios</a>
+      <a href="#proceso"><small>03</small>Proceso</a>
+      <a href="#preguntas"><small>04</small>Preguntas</a>
+      <a href="#precios"><small>05</small>Precios</a>
+      <a href="#seguridad"><small>06</small>Seguridad</a>
+      <a href="#sectores"><small>07</small>Sectores</a>
+    </nav>
+    <div class="mobile-menu__foot">
+      <button type="button" class="mobile-menu__cta" onclick="handleWhatsAppClick()">Quiero mi web</button>
+      <p>Asesoría gratuita por WhatsApp.</p>
     </div>
+  </div>
 
-    <!-- Texto de Presentación -->
-    <div class="mt-4 max-w-2xl mx-auto text-left md:text-center reveal-on-scroll is-visible delay-100">
-      <p class="font-body-sans text-[#8e8e93] text-[17px] sm:text-[20px] leading-[1.55]">
-        Somos <strong class="text-white font-bold">LanzaWebs.</strong> una agencia de desarrollo web y brading, tambien brindamos software.
-      </p>
-    </div>
-
-    <!-- SECCIÓN PROYECTOS -->
-    <section id="proyectos" class="mt-12 sm:mt-16 reveal-on-scroll" aria-label="Galería de proyectos">
-      <div class="mb-8 text-left">
-        <h2 class="font-heading-sans text-white text-2xl sm:text-3xl tracking-tight uppercase pb-3.5 border-b border-white/15">
-          PROYECTOS
-        </h2>
-      </div>
-
-      <div class="cards-stage" id="heroSliderStage">
-
-        <!-- PROYECTO 1: EPFAR | Pagina Oficial -->
-        <div class="slide-card pos-center" data-index="0" onclick="handleCardClick(0, 'https://epfar.netlify.app/')">
-          <a
-            href="https://epfar.netlify.app/"
-            target="_blank"
-            rel="noopener noreferrer"
-            onclick="event.stopPropagation()"
-            class="w-full bg-white text-black font-heading-sans text-xs tracking-widest uppercase py-3.5 px-4 flex items-center justify-center hover:bg-zinc-200 transition shrink-0 border-b border-black/10"
-          >
-            VER PAGINA
-          </a>
-          <div class="slide-card-img-wrapper">
-            <img
-              src="FOTO EPFAR.jpg"
-              onerror="if(this.src.endsWith('FOTO%20EPFAR.jpg')) this.src='FOTO EPFAR.JPG';"
-              alt="EPFAR | Pagina Oficial"
-            />
-          </div>
-        </div>
-
-        <!-- PROYECTO 2: Carla Portillo Psicologa -->
-        <div class="slide-card pos-right" data-index="1" onclick="handleCardClick(1, 'https://carlaportillo.netlify.app/')">
-          <a
-            href="https://carlaportillo.netlify.app/"
-            target="_blank"
-            rel="noopener noreferrer"
-            onclick="event.stopPropagation()"
-            class="w-full bg-white text-black font-heading-sans text-xs tracking-widest uppercase py-3.5 px-4 flex items-center justify-center hover:bg-zinc-200 transition shrink-0 border-b border-black/10"
-          >
-            VER PAGINA
-          </a>
-          <div class="slide-card-img-wrapper">
-            <img
-              src="FOTO PSICOLOGA.jpg"
-              onerror="if(this.src.endsWith('FOTO%20PSICOLOGS.jpg')) this.src='FOTO PSICOLOGS.JPG';"
-              alt="Carla Portillo Psicologa"
-            />
-          </div>
-        </div>
-
-        <!-- PROYECTO 3: En proceso... -->
-        <div class="slide-card pos-left" data-index="2" onclick="handleCardClick(2, '')">
-          <div class="w-full bg-white text-black font-heading-sans text-xs tracking-widest uppercase py-3.5 px-4 flex items-center justify-center shrink-0 border-b border-black/10">
-            EN PROCESO…
-          </div>
-          <div class="slide-card-img-wrapper flex flex-col items-center justify-center p-6 text-center bg-gradient-to-b from-[#141418] to-[#09090b]">
-            <div class="w-12 h-12 rounded-full border border-white/15 bg-white/5 flex items-center justify-center mb-4">
-              <span class="w-2.5 h-2.5 rounded-full bg-amber-400 animate-pulse"></span>
-            </div>
-            <p class="font-title-serif text-white text-2xl font-bold tracking-tight mb-2">
-              En proceso…
-            </p>
-            <p class="font-body-sans text-[#8e8e93] text-xs leading-relaxed max-w-[180px]">
-              Próximo desarrollo web de LanzaWebs en preparación.
-            </p>
-          </div>
-        </div>
-
-      </div>
-
-      <!-- Nombre del proyecto e indicadores -->
-      <div class="max-w-xs mx-auto mt-5 flex items-center justify-between px-2">
-        <span id="activeProjectTitle" class="text-xs sm:text-sm font-bold text-white tracking-wide uppercase">
-          1. EPFAR | Pagina Oficial
-        </span>
-        <div class="flex items-center gap-2">
-          <button onclick="selectHeroSlide(0)" class="hero-dot w-6 h-2 rounded-full bg-white transition-all" aria-label="Proyecto 1"></button>
-          <button onclick="selectHeroSlide(1)" class="hero-dot w-2 h-2 rounded-full bg-zinc-600 transition-all" aria-label="Proyecto 2"></button>
-          <button onclick="selectHeroSlide(2)" class="hero-dot w-2 h-2 rounded-full bg-zinc-600 transition-all" aria-label="Proyecto 3"></button>
-        </div>
-      </div>
-    </section>
-
-    <!-- Texto Debajo del Carrusel Alineado a la Izquierda -->
-    <div class="mt-8 text-left reveal-on-scroll">
-      <p class="font-body-sans text-[#8e8e93] text-[16px] sm:text-[18px] leading-[1.6]">
-        Convertimos las visitas de tu Instagram en clientes activos: centralizá tus turnos, recibí consultas directas en tu WhatsApp y escalá tu negocio optimizando la busqueda de tu profesion/servicios en el buscador.
-      </p>
-    </div>
-
-    <!-- Botones de Acción EN LA MISMA LÍNEA -->
-    <div class="mt-7 flex flex-row items-center justify-start gap-3.5 sm:gap-6 flex-nowrap reveal-on-scroll">
-      <button
-        type="button"
-        onclick="handleWhatsAppClick()"
-        class="bg-white text-black font-bold text-[14px] sm:text-[16px] px-5 sm:px-7 py-3 sm:py-3.5 rounded-full shadow-[0_10px_30px_rgba(255,255,255,0.15)] hover:bg-zinc-200 active:scale-95 transition whitespace-nowrap shrink-0"
-      >
-        Quiero mi web
-      </button>
-
-      <a
-        href="#beneficios"
-        onclick="slowScrollTo(event, 'beneficios')"
-        class="inline-flex items-center gap-1.5 text-white font-bold text-[11px] sm:text-sm tracking-wider uppercase hover:text-zinc-300 transition py-2 whitespace-nowrap group"
-      >
-        <span>NUESTRA FORMA DE TRABAJAR</span>
-        <span class="text-zinc-400 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform text-sm sm:text-base leading-none">↗</span>
-      </a>
-    </div>
-
-    <!-- SECCIÓN 2: BENEFICIOS -->
-    <section id="beneficios" class="mt-24 pt-4">
-      <div class="reveal-on-scroll">
-        <h2 class="font-body-sans text-white text-[28px] sm:text-[34px] font-normal tracking-tight uppercase pb-4 border-b border-white/15">
-          BENEFICIOS
-        </h2>
-      </div>
-
-      <div class="mt-6 mb-8 reveal-on-scroll">
-        <p class="font-body-sans text-white text-[20px] sm:text-[24px] leading-[1.4] font-normal max-w-2xl">
-          Una web hecha a medida, pensada para traer consultas y trabajar por vos todos los días.
-        </p>
-      </div>
-
-      <!-- Lista Numerada 01 a 04 -->
-      <div class="divide-y divide-white/15 border-t border-white/15">
-        <div class="py-6 flex items-start gap-6 reveal-on-scroll">
-          <span class="text-[#22c55e] text-xs font-bold pt-1.5 shrink-0">01</span>
-          <div>
-            <h3 class="text-white text-[20px] sm:text-[22px] font-bold leading-tight">
-              Diseño a medida
-            </h3>
-            <p class="font-body-sans text-[#8e8e93] text-[15px] sm:text-[17px] mt-1.5 leading-relaxed">
-              Nada de plantillas: se parece a tu negocio.
-            </p>
-          </div>
-        </div>
-
-        <div class="py-6 flex items-start gap-6 reveal-on-scroll">
-          <span class="text-[#22c55e] text-xs font-bold pt-1.5 shrink-0">02</span>
-          <div>
-            <h3 class="text-white text-[20px] sm:text-[22px] font-bold leading-tight">
-              Pensada para convertir
-            </h3>
-            <p class="font-body-sans text-[#8e8e93] text-[15px] sm:text-[17px] mt-1.5 leading-relaxed">
-              Cada pantalla lleva a escribir, llamar o comprar.
-            </p>
-          </div>
-        </div>
-
-        <div class="py-6 flex items-start gap-6 reveal-on-scroll">
-          <span class="text-[#22c55e] text-xs font-bold pt-1.5 shrink-0">03</span>
-          <div>
-            <h3 class="text-white text-[20px] sm:text-[22px] font-bold leading-tight">
-              Rápida de verdad
-            </h3>
-            <p class="font-body-sans text-[#8e8e93] text-[15px] sm:text-[17px] mt-1.5 leading-relaxed">
-              Código propio y liviano, impecable en el celular.
-            </p>
-          </div>
-        </div>
-
-        <div class="py-6 flex items-start gap-6 reveal-on-scroll">
-          <span class="text-[#22c55e] text-xs font-bold pt-1.5 shrink-0">04</span>
-          <div>
-            <h3 class="text-white text-[20px] sm:text-[22px] font-bold leading-tight">
-              Lista para Google
-            </h3>
-            <p class="font-body-sans text-[#8e8e93] text-[15px] sm:text-[17px] mt-1.5 leading-relaxed">
-              Te encuentran por lo que hacés.
-            </p>
-          </div>
-        </div>
-      </div>
-
-      <!-- Tarjeta Blanca "Trato directo" -->
-      <div class="mt-5 bg-white text-black rounded-2xl p-5 sm:p-6 flex items-center justify-between gap-4 shadow-lg reveal-on-scroll">
-        <p class="font-body-sans text-[14px] sm:text-[16px] leading-snug text-zinc-800">
-          <strong class="font-black text-black">Trato directo</strong> Hablás siempre con quien hace el trabajo, también después del lanzamiento.
-        </p>
-        <button onclick="handleWhatsAppClick()" aria-label="Contactar" class="w-11 h-11 rounded-full bg-black text-white flex items-center justify-center shrink-0 hover:scale-105 active:scale-95 transition">
-          <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M7 17L17 7M17 7H8M17 7V16" />
-          </svg>
-        </button>
-      </div>
-    </section>
+  <main id="main">
 
     <!-- ===================================================================== -->
-    <!-- SECCIÓN: PROCESO                                                      -->
+    <!-- HOME (blanco total)                                                   -->
     <!-- ===================================================================== -->
-    <section id="proceso" class="mt-24 pt-4">
-      <div class="reveal-on-scroll">
-        <h2 class="font-body-sans text-white text-[28px] sm:text-[34px] font-normal tracking-tight uppercase pb-4 border-b border-white/15">
-          PROCESO
-        </h2>
-      </div>
+    <section id="inicio" class="hero" aria-label="Inicio">
+      <div class="hero__inner">
 
-      <div class="mt-6 mb-8 reveal-on-scroll">
-        <p class="font-body-sans text-white text-[19px] sm:text-[22px] leading-[1.42] font-normal max-w-2xl">
-          Cuatro pasos, plazos cerrados y una sola persona respondiendo. Sabés siempre en qué etapa está tu web.
-        </p>
-      </div>
-
-      <div class="divide-y divide-white/15 border-t border-white/15">
-        <div class="py-7 reveal-on-scroll">
-          <span class="block text-white text-xs font-bold mb-3">01</span>
-          <h3 class="text-white text-[26px] sm:text-[30px] font-bold leading-tight mb-2.5">
-            Entender tu negocio
-          </h3>
-          <p class="font-body-sans text-[#9ca3af] text-[15px] sm:text-[17px] leading-relaxed">
-            Charlamos qué vendés, a quién y qué te está frenando hoy.
-          </p>
-        </div>
-
-        <div class="py-7 reveal-on-scroll">
-          <span class="block text-white text-xs font-bold mb-3">02</span>
-          <h3 class="text-white text-[26px] sm:text-[30px] font-bold leading-tight mb-2.5">
-            Definir el plan
-          </h3>
-          <p class="font-body-sans text-[#9ca3af] text-[15px] sm:text-[17px] leading-relaxed">
-            Secciones, textos y objetivo de cada pantalla. Presupuesto y plazo cerrados.
-          </p>
-        </div>
-
-        <div class="py-7 reveal-on-scroll">
-          <span class="block text-white text-xs font-bold mb-3">03</span>
-          <h3 class="text-white text-[26px] sm:text-[30px] font-bold leading-tight mb-2.5">
-            Diseñar y mostrar
-          </h3>
-          <p class="font-body-sans text-[#9ca3af] text-[15px] sm:text-[17px] leading-relaxed">
-            Ves el diseño antes de que exista una sola línea de código, y opinás.
-          </p>
-        </div>
-
-        <div class="py-7 reveal-on-scroll">
-          <span class="block text-white text-xs font-bold mb-3">04</span>
-          <h3 class="text-white text-[26px] sm:text-[30px] font-bold leading-tight mb-2.5">
-            Publicar y acompañar
-          </h3>
-          <p class="font-body-sans text-[#9ca3af] text-[15px] sm:text-[17px] leading-relaxed">
-            Sale en vivo, medimos qué pasa y seguimos disponibles después.
-          </p>
-        </div>
-      </div>
-    </section>
-
-    <!-- ===================================================================== -->
-    <!-- SECCIÓN: PREGUNTAS                                                    -->
-    <!-- ===================================================================== -->
-    <section id="preguntas" class="mt-24 pt-4">
-      <div class="reveal-on-scroll">
-        <h2 class="font-body-sans text-white text-[28px] sm:text-[34px] font-normal tracking-tight uppercase mb-3">
-          PREGUNTAS
-        </h2>
-        <p class="font-body-sans text-[#9ca3af] text-[15px] sm:text-[17px] mb-8">
-          Las cuatro dudas que aparecen antes de decidir.
-        </p>
-      </div>
-
-      <div class="divide-y divide-white/15 border-t border-b border-white/15">
-        <!-- Pregunta 1 -->
-        <div class="faq-item reveal-on-scroll">
+        <div class="hero__main">
           <button
             type="button"
-            onclick="toggleFaq(this)"
-            class="w-full py-5 flex items-center justify-between gap-4 text-left"
+            class="hero-badge anim-fade-up"
+            style="--d: 0.05s"
+            onclick="handleWhatsAppClick('Hola LanzaWebs! Quiero pedir la asesoría gratuita para mi web.')"
           >
-            <span class="text-white text-[18px] sm:text-[20px] font-normal">¿Cuánto sale una web?</span>
-            <span class="faq-icon text-white text-2xl font-light leading-none shrink-0">+</span>
+            <span class="hero-badge__icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><path d="M12 2.5v19M2.5 12h19M5.3 5.3l13.4 13.4M18.7 5.3 5.3 18.7M8.4 3.3l7.2 17.4M15.6 3.3 8.4 20.7M3.3 8.4l17.4 7.2M20.7 8.4 3.3 15.6" /></svg>
+            </span>
+            <span>Pedí tu asesoría gratuita</span>
+            <svg class="hero-badge__arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M17 7H8.5M17 7v8.5" /></svg>
           </button>
-          <div class="faq-answer">
-            <p class="font-body-sans text-[#9ca3af] text-[15px] sm:text-[16px] leading-relaxed">
-              Depende de cuántas secciones necesites y de si hay tienda, reservas o catálogo. Los rangos están publicados en la página de inversión, así que sabés en qué orden te movés antes de escribir.
-              <a href="#rangos-inversion" onclick="openRangosPanel()" class="text-[#ffd60a] font-bold uppercase tracking-wider ml-1 hover:underline">
-                VER PRECIOS
+
+          <h1 class="hero-title">
+            <span class="line"><span class="line__in" style="--i: 0">Desarrollo web</span></span>
+            <span class="line"><span class="line__in" style="--i: 1"><span class="muted">hecho</span> <em>a medida</em></span></span>
+            <span class="line"><span class="line__in" style="--i: 2"><span class="muted">para tu</span> negocio.</span></span>
+          </h1>
+
+          <div class="hero-actions">
+            <div class="anim-fade-up" style="--d: 0.45s">
+              <p class="eyebrow">Lo que hacemos</p>
+              <p class="sr-only">Páginas web a medida, tiendas online, software a medida para consultorios y branding.</p>
+
+              <!-- Texto rotativo: para sumar un servicio, copiá un .rot-item -->
+              <div class="rotator" id="servicesRotator" aria-hidden="true">
+                <div class="rot-item is-active">
+                  <span class="rot-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8.5 8 4.5 12l4 4M15.5 8l4 4-4 4M13.2 6.5l-2.4 11" /></svg>
+                  </span>
+                  <span>Páginas web a medida</span>
+                </div>
+                <div class="rot-item">
+                  <span class="rot-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5.5 8.5h13l-1 11.5h-11z" /><path d="M9 8.5V7a3 3 0 0 1 6 0v1.5" /></svg>
+                  </span>
+                  <span>Tienda online</span>
+                </div>
+                <div class="rot-item">
+                  <span class="rot-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="5.5" width="16" height="14.5" rx="2.5" /><path d="M8 3.5v4M16 3.5v4M4 10h16M12 12.6v4.6M9.7 14.9h4.6" /></svg>
+                  </span>
+                  <span>Software a medida para consultorios</span>
+                </div>
+                <div class="rot-item">
+                  <span class="rot-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 3.5l1.9 5.1 5.1 1.9-5.1 1.9L11 17.5l-1.9-5.1L4 10.5l5.1-1.9z" /><path d="M18.5 15.5v5M16 18h5" /></svg>
+                  </span>
+                  <span>Branding</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="hero-cta-row anim-fade-up" style="--d: 0.6s">
+              <a href="#proyectos" class="pill-cta" data-scroll-duration="1300">
+                <span>Ver proyectos</span>
+                <span class="pill-cta__circle" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7M17 7H8.5M17 7v8.5" /></svg>
+                </span>
               </a>
-            </p>
+            </div>
           </div>
         </div>
 
-        <!-- Pregunta 2 -->
-        <div class="faq-item reveal-on-scroll">
-          <button
-            type="button"
-            onclick="toggleFaq(this)"
-            class="w-full py-5 flex items-center justify-between gap-4 text-left"
-          >
-            <span class="text-white text-[18px] sm:text-[20px] font-normal">¿Cuánto tarda?</span>
-            <span class="faq-icon text-white text-2xl font-light leading-none shrink-0">+</span>
-          </button>
-          <div class="faq-answer">
-            <p class="font-body-sans text-[#9ca3af] text-[15px] sm:text-[16px] leading-relaxed">
-              Un sitio institucional suele estar en vivo entre 48 y 72horas desde que están los contenidos. El plazo se cierra en el presupuesto y no se estira sobre la marcha.
-            </p>
+        <div class="hero__bottom anim-fade-up" style="--d: 0.8s">
+          <p class="clients-label">Confían en nosotros</p>
+
+          <!-- MARQUESINA DE CLIENTES (en blanco y negro)
+               Para poner el logo real de un cliente, reemplazá su <li> por:
+               <li class="logo-item"><img src="logos/epfar.png" alt="EPFAR"></li>
+               (PNG o SVG con fondo transparente; se pasa a blanco y negro solo).
+               Para sumar clientes, agregá más <li>: el script los repite para que el loop no corte. -->
+          <div class="logo-marquee" id="logoMarquee">
+            <div class="logo-track">
+              <ul class="logo-group" aria-label="Clientes de LanzaWebs">
+                <li class="logo-item"><span class="wordmark wm-epfar">EPFAR</span></li>
+                <li class="logo-item"><span class="wordmark wm-carla">Carla Portillo<small>Psicóloga</small></span></li>
+                <li class="logo-item"><span class="wordmark wm-melo">MELO<small>Metalúrgica</small></span></li>
+              </ul>
+            </div>
           </div>
+
+          <a href="#proyectos" class="scroll-hint" data-scroll-duration="1300">
+            <span>Deslizá</span>
+            <span class="pulse-bars" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
+          </a>
         </div>
 
-        <!-- Pregunta 3 -->
-        <div class="faq-item reveal-on-scroll">
-          <button
-            type="button"
-            onclick="toggleFaq(this)"
-            class="w-full py-5 flex items-center justify-between gap-4 text-left"
-          >
-            <span class="text-white text-[18px] sm:text-[20px] font-normal">Ya tengo una web, ¿sirve rehacerla?</span>
-            <span class="faq-icon text-white text-2xl font-light leading-none shrink-0">+</span>
-          </button>
-          <div class="faq-answer">
-            <p class="font-body-sans text-[#9ca3af] text-[15px] sm:text-[16px] leading-relaxed">
-              Si tarda en cargar, se ve mal en el celular o nadie te escribe desde ahí, sí. Se puede rehacer conservando lo que ya funciona: dominio, contenidos y posicionamiento ganado.
-            </p>
-          </div>
-        </div>
-
-        <!-- Pregunta 4 -->
-        <div class="faq-item reveal-on-scroll">
-          <button
-            type="button"
-            onclick="toggleFaq(this)"
-            class="w-full py-5 flex items-center justify-between gap-4 text-left"
-          >
-            <span class="text-white text-[18px] sm:text-[20px] font-normal">¿Después la puedo actualizar yo?</span>
-            <span class="faq-icon text-white text-2xl font-light leading-none shrink-0">+</span>
-          </button>
-          <div class="faq-answer">
-            <p class="font-body-sans text-[#9ca3af] text-[15px] sm:text-[16px] leading-relaxed">
-              Sí. Si el proyecto lo pide, se entrega con un panel para cambiar textos, fotos y precios sin tocar código. Y si preferís no ocuparte, el estudio se encarga.
-            </p>
-          </div>
-        </div>
-      </div>
-
-      <!-- Bloque inferior: Planes, condiciones y extras + Botón VER RANGOS DE INVERSIÓN -->
-      <div id="rangos-inversion" class="mt-8 reveal-on-scroll">
-        <p class="font-body-sans text-[#9ca3af] text-[14px] sm:text-[15px] mb-3.5">
-          Planes, condiciones y extras.
-        </p>
-        <button
-          type="button"
-          onclick="toggleRangosPanel()"
-          class="inline-flex items-center gap-2.5 border border-white/25 hover:border-white text-white text-xs sm:text-sm font-bold uppercase tracking-wider px-5 py-3 rounded-full transition"
-        >
-          <span>VER RANGOS DE INVERSIÓN</span>
-          <span class="text-sm leading-none">↗</span>
-        </button>
-
-        <div id="rangosDetalle" class="hidden mt-6 grid grid-cols-1 md:grid-cols-3 gap-4 pt-2">
-          <div class="bg-[#121214] border border-white/10 rounded-2xl p-5">
-            <span class="text-[11px] font-bold uppercase tracking-widest text-emerald-400">Landing Page</span>
-            <h4 class="text-white font-bold text-lg mt-1">Presencia & Turnos</h4>
-            <p class="text-xs text-[#8e8e93] mt-2 leading-relaxed">Ideal para profesionales, consultorios y barberías que buscan concentrar turnos y consultas de WhatsApp.</p>
-            <button onclick="handleWhatsAppClick()" class="mt-4 w-full bg-white/10 hover:bg-white hover:text-black text-white text-xs font-bold py-2.5 rounded-xl transition">Consultar rango</button>
-          </div>
-          <div class="bg-[#121214] border border-white/20 rounded-2xl p-5">
-            <span class="text-[11px] font-bold uppercase tracking-widest text-[#ffd60a]">Sitio Web Completo</span>
-            <h4 class="text-white font-bold text-lg mt-1">Institucional & Marca</h4>
-            <p class="text-xs text-[#8e8e93] mt-2 leading-relaxed">Múltiples secciones, galería de proyectos, posicionamiento en Google y diseño de identidad a medida.</p>
-            <button onclick="handleWhatsAppClick()" class="mt-4 w-full bg-white text-black text-xs font-bold py-2.5 rounded-xl hover:bg-zinc-200 transition">Consultar rango</button>
-          </div>
-          <div class="bg-[#121214] border border-white/10 rounded-2xl p-5">
-            <span class="text-[11px] font-bold uppercase tracking-widest text-sky-400">Software & Catálogo</span>
-            <h4 class="text-white font-bold text-lg mt-1">Tienda & Sistemas</h4>
-            <p class="text-xs text-[#8e8e93] mt-2 leading-relaxed">Catálogo autogestionable, pedidos al WhatsApp o desarrollo de software personalizado para tu negocio.</p>
-            <button onclick="handleWhatsAppClick()" class="mt-4 w-full bg-white/10 hover:bg-white hover:text-black text-white text-xs font-bold py-2.5 rounded-xl transition">Consultar rango</button>
-          </div>
-        </div>
       </div>
     </section>
-
-    <hr class="border-white/10 my-20" />
 
     <!-- ===================================================================== -->
-    <!-- SECCIÓN: SEGURIDAD PARA TU WEB                                        -->
+    <!-- ZONA NEGRA: arranca con un círculo negro que crece al hacer scroll     -->
     <!-- ===================================================================== -->
-    <section id="seguridad" class="reveal-on-scroll">
-      <p class="font-body-sans text-[#8e8e93] text-sm sm:text-base font-bold mb-1.5">
-        Arquitectura segura y confiable.
-      </p>
-      <h2 class="font-heading-sans text-white text-3xl sm:text-4xl uppercase mb-6">
-        SEGURIDAD PARA TU WEB.
-      </h2>
+    <div id="darkZone" class="dark-zone">
+      <div id="dome" class="dome" aria-hidden="true"></div>
 
-      <div class="font-body-sans text-[#8e8e93] text-[17px] sm:text-[19px] leading-[1.6] space-y-5">
-        <p>
-          en <strong class="text-white font-bold">LanzaWebs</strong> nos ocupamos de que tu sitio web cuente desde el primer dia con seguridad.
-        </p>
-        <p>
-          Todas nuestras páginas webs incluyen conexión segura y verificación de seguridad diaria. Protegiendo tus datos, turno o consulta que se realice. Además blindamos tu sitio contra accesos no deseados e integramos las <strong class="text-white font-bold">Políticas de Privacidad, Avisos legales y el resguardo de datos personales necesarios</strong> para que tu negocio funcione con total respaldo, privacidad y tranquilidad.
-        </p>
-      </div>
-    </section>
+      <div class="dark-content max-w-xl md:max-w-3xl lg:max-w-4xl mx-auto px-6 sm:px-8 pb-20">
 
-    <hr class="border-white/10 my-20" />
-
-    <!-- SECCIÓN: DOMINIO PERSONALIZADO -->
-    <section id="dominio" class="reveal-on-scroll">
-      <p class="font-body-sans text-[#8e8e93] text-sm sm:text-base font-bold mb-1.5">
-        Identidad digital propia.
-      </p>
-      <h2 class="font-heading-sans text-white text-3xl sm:text-4xl uppercase mb-6">
-        DOMINIO PERSONALIZADO.
-      </h2>
-
-      <p class="font-body-sans text-[#8e8e93] text-[17px] sm:text-[19px] leading-[1.6] mb-8">
-        Tu marca merece una dirección única en internet. Configuramos tu dominio oficial con el nombre de tu proyecto u negocio para que tus clientes te encuentren rápido en Google, recuerden tu dirección fácilmente y accedan desde tu Instagram con una imagen 100% profesional y propia.
-      </p>
-
-      <!-- Ejemplos visuales de dominios -->
-      <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
-        <div class="bg-[#121214] border border-white/10 rounded-2xl px-4 py-3.5 flex items-center justify-between">
-          <div class="flex items-center gap-2.5 truncate">
-            <svg class="w-4 h-4 text-emerald-400 shrink-0" fill="currentColor" viewBox="0 0 20 20">
-              <path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd" />
-            </svg>
-            <span class="font-body-sans text-sm text-white font-bold tracking-tight truncate">www.lanzawebs.com</span>
+        <!-- SECCIÓN PROYECTOS -->
+        <section id="proyectos" aria-label="Galería de proyectos">
+          <div class="reveal-on-scroll">
+            <p class="kicker">Proyectos / 2025–2026</p>
+            <h2 class="mega">Webs que<br />trabajan<br />por vos.</h2>
+            <p class="lead">
+              Diseñamos y desarrollamos webs para consultorios, profesionales, barberías, agencias y comercios: rápidas, pensadas para el celular y para que te escriban.
+            </p>
           </div>
-          <span class="text-[10px] font-bold text-emerald-400 bg-emerald-400/10 px-2 py-0.5 rounded-full shrink-0">Oficial</span>
-        </div>
 
-        <div class="bg-[#121214] border border-white/10 rounded-2xl px-4 py-3.5 flex items-center justify-between">
-          <div class="flex items-center gap-2.5 truncate">
-            <svg class="w-4 h-4 text-emerald-400 shrink-0" fill="currentColor" viewBox="0 0 20 20">
-              <path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd" />
-            </svg>
-            <span class="font-body-sans text-sm text-zinc-300 font-bold tracking-tight truncate">www.tuconsultorio.com</span>
-          </div>
-          <span class="text-[10px] font-bold text-zinc-400 bg-white/5 px-2 py-0.5 rounded-full shrink-0">Salud</span>
-        </div>
+          <div class="cards-stage mt-12 sm:mt-14 reveal-on-scroll" id="heroSliderStage">
 
-        <div class="bg-[#121214] border border-white/10 rounded-2xl px-4 py-3.5 flex items-center justify-between">
-          <div class="flex items-center gap-2.5 truncate">
-            <svg class="w-4 h-4 text-emerald-400 shrink-0" fill="currentColor" viewBox="0 0 20 20">
-              <path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd" />
-            </svg>
-            <span class="font-body-sans text-sm text-zinc-300 font-bold tracking-tight truncate">www.tunegocio.com</span>
-          </div>
-          <span class="text-[10px] font-bold text-zinc-400 bg-white/5 px-2 py-0.5 rounded-full shrink-0">Comercio</span>
-        </div>
-      </div>
-    </section>
-
-    <hr class="border-white/10 my-20" />
-
-    <!-- SECCIÓN: ISLA INTERACTIVA + CARRUSEL DE SECTORES -->
-    <section id="sectores" class="reveal-on-scroll">
-      <div class="flex justify-center mb-8">
-        <div class="apple-island" role="tablist" aria-label="Seleccionar rubro">
-          <div id="islandPill" class="island-pill-bg"></div>
-          <button type="button" class="island-btn active" onclick="selectSector(0)" role="tab" aria-selected="true">
-            CONSULTORIOS
-          </button>
-          <button type="button" class="island-btn" onclick="selectSector(1)" role="tab" aria-selected="false">
-            BARBEROS
-          </button>
-          <button type="button" class="island-btn" onclick="selectSector(2)" role="tab" aria-selected="false">
-            NEGOCIOS
-          </button>
-        </div>
-      </div>
-
-      <div id="sectorCarousel" class="relative overflow-hidden">
-        <div id="sectorTrack" class="flex transition-transform duration-500 ease-out">
-
-          <!-- TARJETA 1: CONSULTORIOS -->
-          <div class="w-full shrink-0 px-1">
-            <div class="apple-feature-card">
-              <div class="mb-6">
-                <svg class="w-9 h-9 text-[#30d158]" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" />
-                </svg>
+            <!-- PROYECTO 1: EPFAR | Página oficial -->
+            <div class="slide-card pos-center" data-index="0" onclick="handleCardClick(0, 'https://epfar.com/')">
+              <a
+                href="https://epfar.com/"
+                target="_blank"
+                rel="noopener noreferrer"
+                onclick="event.stopPropagation()"
+                class="w-full bg-white text-black font-heading-sans text-xs tracking-widest uppercase py-3.5 px-4 flex items-center justify-center hover:bg-zinc-200 transition shrink-0 border-b border-black/10"
+              >
+                VER PÁGINA
+              </a>
+              <div class="slide-card-img-wrapper">
+                <img
+                  src="FOTO EPFAR.jpg"
+                  onerror="projectImgFallback(this)"
+                  alt="EPFAR | Página oficial"
+                  loading="lazy"
+                  decoding="async"
+                />
               </div>
+            </div>
 
-              <h3 class="font-title-serif text-white text-[26px] sm:text-[32px] font-bold leading-tight mb-5">
-                Desarrollá tu consultorio profesional en la web.
-              </h3>
+            <!-- PROYECTO 2: Carla Portillo Psicóloga -->
+            <div class="slide-card pos-right" data-index="1" onclick="handleCardClick(1, 'https://carlaportillo.netlify.app/')">
+              <a
+                href="https://carlaportillo.netlify.app/"
+                target="_blank"
+                rel="noopener noreferrer"
+                onclick="event.stopPropagation()"
+                class="w-full bg-white text-black font-heading-sans text-xs tracking-widest uppercase py-3.5 px-4 flex items-center justify-center hover:bg-zinc-200 transition shrink-0 border-b border-black/10"
+              >
+                VER PÁGINA
+              </a>
+              <div class="slide-card-img-wrapper">
+                <img
+                  src="FOTO PSICOLOGA.jpg"
+                  onerror="projectImgFallback(this)"
+                  alt="Carla Portillo | Psicóloga"
+                  loading="lazy"
+                  decoding="async"
+                />
+              </div>
+            </div>
 
-              <p class="font-body-sans text-[#8e8e93] text-[16px] sm:text-[18px] leading-[1.6] mb-8">
-                Ideal para consultorios <strong class="text-white font-bold">odontológicos, dermatológicos, kinesiología, psicología, nutrición y medicina general.</strong> Tener presencia visible en la zona y en el link de tu Instagram permite que tus pacientes puedan <strong class="text-white font-bold">solicitar turnos online, enviar consultas directo al WhatsApp del profesional,</strong> conocer en detalle los tratamientos que realizás y ver con mapa interactivo <strong class="text-white font-bold">en qué lugares y horarios atendés.</strong>
-              </p>
+            <!-- PROYECTO 3: En proceso... -->
+            <div class="slide-card pos-left" data-index="2" onclick="handleCardClick(2, '')">
+              <div class="w-full bg-white text-black font-heading-sans text-xs tracking-widest uppercase py-3.5 px-4 flex items-center justify-center shrink-0 border-b border-black/10">
+                EN PROCESO…
+              </div>
+              <div class="slide-card-img-wrapper flex flex-col items-center justify-center p-6 text-center bg-gradient-to-b from-[#141418] to-[#09090b]">
+                <div class="w-12 h-12 rounded-full border border-white/15 bg-white/5 flex items-center justify-center mb-4">
+                  <span class="w-2.5 h-2.5 rounded-full bg-amber-400 animate-pulse"></span>
+                </div>
+                <p class="font-display text-white text-2xl font-bold tracking-tight mb-2">
+                  En proceso…
+                </p>
+                <p class="font-body-sans text-[#8e8e93] text-xs leading-relaxed max-w-[180px]">
+                  Próximo desarrollo web de LanzaWebs en preparación.
+                </p>
+              </div>
+            </div>
 
-              <div class="pt-4 border-t border-white/10">
-                <span class="block text-xs font-bold text-[#8e8e93] mb-1">Beneficio directo</span>
-                <p class="font-heading-sans text-white text-2xl sm:text-3xl leading-tight">
-                  Turnos y consultas 24/7 directo a tu WhatsApp.
+          </div>
+
+          <!-- Nombre del proyecto e indicadores -->
+          <div class="max-w-xs mx-auto mt-5 flex items-center justify-between px-2">
+            <span id="activeProjectTitle" class="text-xs sm:text-sm font-bold text-white tracking-wide uppercase">
+              1. EPFAR | Página oficial
+            </span>
+            <div class="flex items-center gap-2">
+              <button onclick="selectHeroSlide(0)" class="hero-dot w-6 h-2 rounded-full bg-white transition-all" aria-label="Proyecto 1"></button>
+              <button onclick="selectHeroSlide(1)" class="hero-dot w-2 h-2 rounded-full bg-zinc-600 transition-all" aria-label="Proyecto 2"></button>
+              <button onclick="selectHeroSlide(2)" class="hero-dot w-2 h-2 rounded-full bg-zinc-600 transition-all" aria-label="Proyecto 3"></button>
+            </div>
+          </div>
+        </section>
+
+        <!-- Texto Debajo del Carrusel Alineado a la Izquierda -->
+        <div class="mt-8 text-left reveal-on-scroll">
+          <p class="font-body-sans text-[#8e8e93] text-[16px] sm:text-[18px] leading-[1.6]">
+            Convertimos las visitas de tu Instagram en clientes activos: centralizá tus turnos, recibí consultas directas en tu WhatsApp y escalá tu negocio optimizando la búsqueda de tu profesión o servicio en Google.
+          </p>
+        </div>
+
+        <!-- Botones de Acción EN LA MISMA LÍNEA -->
+        <div class="mt-7 flex flex-row flex-wrap items-center justify-start gap-x-3.5 gap-y-2 sm:gap-x-6 reveal-on-scroll">
+          <button
+            type="button"
+            onclick="handleWhatsAppClick()"
+            class="bg-white text-black font-bold text-[14px] sm:text-[16px] px-5 sm:px-7 py-3 sm:py-3.5 rounded-full shadow-[0_10px_30px_rgba(255,255,255,0.15)] hover:bg-zinc-200 active:scale-95 transition whitespace-nowrap shrink-0"
+          >
+            Quiero mi web
+          </button>
+
+          <a
+            href="#beneficios"
+            onclick="slowScrollTo(event, 'beneficios')"
+            class="inline-flex items-center gap-1.5 text-white font-bold text-[11px] sm:text-sm tracking-wider uppercase hover:text-zinc-300 transition py-2 whitespace-nowrap group"
+          >
+            <span>NUESTRA FORMA DE TRABAJAR</span>
+            <span class="text-zinc-400 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform text-sm sm:text-base leading-none">↗</span>
+          </a>
+        </div>
+
+        <!-- SECCIÓN 2: BENEFICIOS -->
+        <section id="beneficios" class="mt-24 pt-4">
+          <div class="reveal-on-scroll">
+            <h2 class="font-body-sans text-white text-[28px] sm:text-[34px] font-normal tracking-tight uppercase pb-4 border-b border-white/15">
+              BENEFICIOS
+            </h2>
+          </div>
+
+          <div class="mt-6 mb-8 reveal-on-scroll">
+            <p class="font-body-sans text-white text-[20px] sm:text-[24px] leading-[1.4] font-normal max-w-2xl">
+              Una web hecha a medida, pensada para traer consultas y trabajar por vos todos los días.
+            </p>
+          </div>
+
+          <!-- Lista Numerada 01 a 04 -->
+          <div class="divide-y divide-white/15 border-t border-white/15">
+            <div class="py-6 flex items-start gap-6 reveal-on-scroll">
+              <span class="text-[#22c55e] text-xs font-bold pt-1.5 shrink-0">01</span>
+              <div>
+                <h3 class="text-white text-[20px] sm:text-[22px] font-bold leading-tight">
+                  Diseño a medida
+                </h3>
+                <p class="font-body-sans text-[#8e8e93] text-[15px] sm:text-[17px] mt-1.5 leading-relaxed">
+                  Nada de plantillas: se parece a tu negocio.
+                </p>
+              </div>
+            </div>
+
+            <div class="py-6 flex items-start gap-6 reveal-on-scroll">
+              <span class="text-[#22c55e] text-xs font-bold pt-1.5 shrink-0">02</span>
+              <div>
+                <h3 class="text-white text-[20px] sm:text-[22px] font-bold leading-tight">
+                  Pensada para convertir
+                </h3>
+                <p class="font-body-sans text-[#8e8e93] text-[15px] sm:text-[17px] mt-1.5 leading-relaxed">
+                  Cada pantalla lleva a escribir, llamar o comprar.
+                </p>
+              </div>
+            </div>
+
+            <div class="py-6 flex items-start gap-6 reveal-on-scroll">
+              <span class="text-[#22c55e] text-xs font-bold pt-1.5 shrink-0">03</span>
+              <div>
+                <h3 class="text-white text-[20px] sm:text-[22px] font-bold leading-tight">
+                  Rápida de verdad
+                </h3>
+                <p class="font-body-sans text-[#8e8e93] text-[15px] sm:text-[17px] mt-1.5 leading-relaxed">
+                  Código propio y liviano, impecable en el celular.
+                </p>
+              </div>
+            </div>
+
+            <div class="py-6 flex items-start gap-6 reveal-on-scroll">
+              <span class="text-[#22c55e] text-xs font-bold pt-1.5 shrink-0">04</span>
+              <div>
+                <h3 class="text-white text-[20px] sm:text-[22px] font-bold leading-tight">
+                  Lista para Google
+                </h3>
+                <p class="font-body-sans text-[#8e8e93] text-[15px] sm:text-[17px] mt-1.5 leading-relaxed">
+                  Te encuentran por lo que hacés.
                 </p>
               </div>
             </div>
           </div>
 
-          <!-- TARJETA 2: BARBEROS -->
-          <div class="w-full shrink-0 px-1">
-            <div class="apple-feature-card">
-              <div class="mb-6">
-                <svg class="w-9 h-9 text-[#ffd60a]" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M14.121 14.121L19 19m-7-7l7-7m-7 7l-2.879 2.879M12 12L9.121 9.121m0 5.758a3 3 0 10-4.243 4.243 3 3 0 004.243-4.243zm0-5.758a3 3 0 10-4.243-4.243 3 3 0 004.243 4.243z" />
-                </svg>
-              </div>
+          <!-- Tarjeta Blanca "Trato directo" -->
+          <div class="mt-5 bg-white text-black rounded-2xl p-5 sm:p-6 flex items-center justify-between gap-4 shadow-lg reveal-on-scroll">
+            <p class="font-body-sans text-[14px] sm:text-[16px] leading-snug text-zinc-800">
+              <strong class="font-black text-black">Trato directo.</strong> Hablás siempre con quien hace el trabajo, también después del lanzamiento.
+            </p>
+            <button onclick="handleWhatsAppClick()" aria-label="Contactar por WhatsApp" class="w-11 h-11 rounded-full bg-black text-white flex items-center justify-center shrink-0 hover:scale-105 active:scale-95 transition">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M7 17L17 7M17 7H8M17 7V16" />
+              </svg>
+            </button>
+          </div>
+        </section>
 
-              <h3 class="font-title-serif text-white text-[26px] sm:text-[32px] font-bold leading-tight mb-5">
-                Tu barbería con agenda llena y estilo propio.
+        <!-- ===================================================================== -->
+        <!-- SECCIÓN: PROCESO                                                      -->
+        <!-- ===================================================================== -->
+        <section id="proceso" class="mt-24 pt-4">
+          <div class="reveal-on-scroll">
+            <h2 class="font-body-sans text-white text-[28px] sm:text-[34px] font-normal tracking-tight uppercase pb-4 border-b border-white/15">
+              PROCESO
+            </h2>
+          </div>
+
+          <div class="mt-6 mb-8 reveal-on-scroll">
+            <p class="font-body-sans text-white text-[19px] sm:text-[22px] leading-[1.42] font-normal max-w-2xl">
+              Cuatro pasos, plazos cerrados y una sola persona respondiendo. Sabés siempre en qué etapa está tu web.
+            </p>
+          </div>
+
+          <div class="divide-y divide-white/15 border-t border-white/15">
+            <div class="py-7 reveal-on-scroll">
+              <span class="block text-white text-xs font-bold mb-3">01</span>
+              <h3 class="text-white text-[26px] sm:text-[30px] font-bold leading-tight mb-2.5">
+                Entender tu negocio
               </h3>
-
-              <p class="font-body-sans text-[#8e8e93] text-[16px] sm:text-[18px] leading-[1.6] mb-8">
-                Olvidate de perder tiempo respondiendo mensajes mientras estás cortando. Con tu propia web en tu biografía de Instagram, tus clientes pueden <strong class="text-white font-bold">reservar su turno eligiendo día, horario y barbero,</strong> mirar tu galería de cortes y trabajos realizados, <strong class="text-white font-bold">consultar precios actualizados de corte y barba</strong> y llegar directo a tu local con un solo toque.
+              <p class="font-body-sans text-[#9ca3af] text-[15px] sm:text-[17px] leading-relaxed">
+                Charlamos qué vendés, a quién y qué te está frenando hoy.
               </p>
+            </div>
 
-              <div class="pt-4 border-t border-white/10">
-                <span class="block text-xs font-bold text-[#8e8e93] mb-1">Automatización total</span>
-                <p class="font-heading-sans text-white text-2xl sm:text-3xl leading-tight">
-                  Reservas de cortes sin interrumpir tu trabajo.
+            <div class="py-7 reveal-on-scroll">
+              <span class="block text-white text-xs font-bold mb-3">02</span>
+              <h3 class="text-white text-[26px] sm:text-[30px] font-bold leading-tight mb-2.5">
+                Definir el plan
+              </h3>
+              <p class="font-body-sans text-[#9ca3af] text-[15px] sm:text-[17px] leading-relaxed">
+                Secciones, textos y objetivo de cada pantalla. Presupuesto y plazo cerrados.
+              </p>
+            </div>
+
+            <div class="py-7 reveal-on-scroll">
+              <span class="block text-white text-xs font-bold mb-3">03</span>
+              <h3 class="text-white text-[26px] sm:text-[30px] font-bold leading-tight mb-2.5">
+                Diseñar y mostrar
+              </h3>
+              <p class="font-body-sans text-[#9ca3af] text-[15px] sm:text-[17px] leading-relaxed">
+                Ves el diseño antes de que exista una sola línea de código, y opinás.
+              </p>
+            </div>
+
+            <div class="py-7 reveal-on-scroll">
+              <span class="block text-white text-xs font-bold mb-3">04</span>
+              <h3 class="text-white text-[26px] sm:text-[30px] font-bold leading-tight mb-2.5">
+                Publicar y acompañar
+              </h3>
+              <p class="font-body-sans text-[#9ca3af] text-[15px] sm:text-[17px] leading-relaxed">
+                Sale en vivo, medimos qué pasa y seguimos disponibles después.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <!-- ===================================================================== -->
+        <!-- SECCIÓN: PREGUNTAS                                                    -->
+        <!-- ===================================================================== -->
+        <section id="preguntas" class="mt-24 pt-4">
+          <div class="reveal-on-scroll">
+            <h2 class="font-body-sans text-white text-[28px] sm:text-[34px] font-normal tracking-tight uppercase mb-3">
+              PREGUNTAS
+            </h2>
+            <p class="font-body-sans text-[#9ca3af] text-[15px] sm:text-[17px] mb-8">
+              Las cuatro dudas que aparecen antes de decidir.
+            </p>
+          </div>
+
+          <div class="divide-y divide-white/15 border-t border-b border-white/15">
+            <!-- Pregunta 1 -->
+            <div class="faq-item reveal-on-scroll">
+              <button
+                type="button"
+                onclick="toggleFaq(this)"
+                class="w-full py-5 flex items-center justify-between gap-4 text-left"
+              >
+                <span class="text-white text-[18px] sm:text-[20px] font-normal">¿Cuánto sale una web?</span>
+                <span class="faq-icon text-white text-2xl font-light leading-none shrink-0">+</span>
+              </button>
+              <div class="faq-answer">
+                <p class="font-body-sans text-[#9ca3af] text-[15px] sm:text-[16px] leading-relaxed">
+                  Una landing page arranca en $90.000, una página web completa en $180.000 (precio promocional) y una tienda online con Tiendanube sale $70.000. Más abajo tenés todo lo que incluye cada plan.
+                  <a href="#precios" class="text-[#ffd60a] font-bold uppercase tracking-wider ml-1 hover:underline">
+                    VER PLANES
+                  </a>
+                </p>
+              </div>
+            </div>
+
+            <!-- Pregunta 2 -->
+            <div class="faq-item reveal-on-scroll">
+              <button
+                type="button"
+                onclick="toggleFaq(this)"
+                class="w-full py-5 flex items-center justify-between gap-4 text-left"
+              >
+                <span class="text-white text-[18px] sm:text-[20px] font-normal">¿Cuánto tarda?</span>
+                <span class="faq-icon text-white text-2xl font-light leading-none shrink-0">+</span>
+              </button>
+              <div class="faq-answer">
+                <p class="font-body-sans text-[#9ca3af] text-[15px] sm:text-[16px] leading-relaxed">
+                  Un sitio institucional suele estar en vivo entre 48 y 72 horas desde que están los contenidos. El plazo se cierra en el presupuesto y no se estira sobre la marcha.
+                </p>
+              </div>
+            </div>
+
+            <!-- Pregunta 3 -->
+            <div class="faq-item reveal-on-scroll">
+              <button
+                type="button"
+                onclick="toggleFaq(this)"
+                class="w-full py-5 flex items-center justify-between gap-4 text-left"
+              >
+                <span class="text-white text-[18px] sm:text-[20px] font-normal">Ya tengo una web, ¿sirve rehacerla?</span>
+                <span class="faq-icon text-white text-2xl font-light leading-none shrink-0">+</span>
+              </button>
+              <div class="faq-answer">
+                <p class="font-body-sans text-[#9ca3af] text-[15px] sm:text-[16px] leading-relaxed">
+                  Si tarda en cargar, se ve mal en el celular o nadie te escribe desde ahí, sí. Se puede rehacer conservando lo que ya funciona: dominio, contenidos y posicionamiento ganado.
+                </p>
+              </div>
+            </div>
+
+            <!-- Pregunta 4 -->
+            <div class="faq-item reveal-on-scroll">
+              <button
+                type="button"
+                onclick="toggleFaq(this)"
+                class="w-full py-5 flex items-center justify-between gap-4 text-left"
+              >
+                <span class="text-white text-[18px] sm:text-[20px] font-normal">¿Después la puedo actualizar yo?</span>
+                <span class="faq-icon text-white text-2xl font-light leading-none shrink-0">+</span>
+              </button>
+              <div class="faq-answer">
+                <p class="font-body-sans text-[#9ca3af] text-[15px] sm:text-[16px] leading-relaxed">
+                  Sí. Si el proyecto lo pide, se entrega con un panel para cambiar textos, fotos y precios sin tocar código. Y si preferís no ocuparte, el estudio se encarga.
                 </p>
               </div>
             </div>
           </div>
 
-          <!-- TARJETA 3: NEGOCIOS -->
-          <div class="w-full shrink-0 px-1">
-            <div class="apple-feature-card">
-              <div class="mb-6">
-                <svg class="w-9 h-9 text-[#0a84ff]" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+        </section>
+
+        <!-- ===================================================================== -->
+        <!-- SECCIÓN: PRECIOS                                                      -->
+        <!-- Para cambiar un precio, editá el número dentro de .plan__price.        -->
+        <!-- Cada botón manda un mensaje de WhatsApp distinto según el plan.       -->
+        <!-- ===================================================================== -->
+        <section id="precios" class="mt-24 pt-4" aria-labelledby="preciosTitulo">
+
+          <!-- Íconos de esta sección (se usan con <svg><use href="#i-..." /></svg>) -->
+          <svg aria-hidden="true" focusable="false" style="position:absolute;width:0;height:0;overflow:hidden">
+            <symbol id="i-check" viewBox="0 0 24 24"><path d="M5 12.5l4.2 4.2L19 7" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" /></symbol>
+            <symbol id="i-chart" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3.5 3.5v17h17" /><path d="M7.5 14.5l3.5-4 3 3 5-6" /></g></symbol>
+            <symbol id="i-shield" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3.2l7 2.8v5.4c0 4.4-2.9 8.1-7 9.4-4.1-1.3-7-5-7-9.4V6z" /><path d="M9 12.2l2.1 2.1L15.2 10" /></g></symbol>
+            <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M7 17 17 7M17 7H8.5M17 7v8.5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" /></symbol>
+            <symbol id="i-pay" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5.5" width="18" height="13" rx="2.5" /><path d="M3 10h18M7 14.5h3.5" /></g></symbol>
+            <symbol id="i-eye" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 12s3.4-6.5 9.5-6.5S21.5 12 21.5 12s-3.4 6.5-9.5 6.5S2.5 12 2.5 12z" /><circle cx="12" cy="12" r="2.8" /></g></symbol>
+            <symbol id="i-clock" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8.5" /><path d="M12 7.5V12l3 2" /></g></symbol>
+            <symbol id="i-refresh" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M19.5 12a7.5 7.5 0 1 1-2.2-5.3" /><path d="M19.5 4.5v4h-4" /></g></symbol>
+            <symbol id="i-globe" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8.5" /><path d="M3.5 12h17M12 3.5c2.3 2.4 3.5 5.2 3.5 8.5s-1.2 6.1-3.5 8.5c-2.3-2.4-3.5-5.2-3.5-8.5s1.2-6.1 3.5-8.5z" /></g></symbol>
+          </svg>
+
+          <div class="reveal-on-scroll">
+            <h2 id="preciosTitulo" class="font-body-sans text-white text-[28px] sm:text-[34px] font-normal tracking-tight uppercase pb-4 border-b border-white/15">
+              PRECIOS
+            </h2>
+          </div>
+
+          <div class="mt-6 mb-10 reveal-on-scroll">
+            <p class="font-body-sans text-white text-[19px] sm:text-[22px] leading-[1.42] font-normal max-w-2xl">
+              Precios claros y en pesos, sin sorpresas: sabés cuánto invertís antes de escribirnos.
+            </p>
+          </div>
+
+          <div class="plans">
+
+            <!-- PLAN 1: LANDING PAGE -->
+            <article class="plan reveal-on-scroll">
+              <div class="plan__body">
+                <p class="plan__label">Para arrancar</p>
+                <h3 class="plan__name">Landing Page</h3>
+                <p class="plan__desc">Una sola página que presenta lo que hacés y lleva directo a tu WhatsApp. Ideal para profesionales y emprendedores.</p>
+
+                <div class="plan__pricing">
+                  <p class="plan__price"><small class="plan__from">desde</small>$90.000<small>ARS</small></p>
+                  <p class="plan__note">Pago único</p>
+                </div>
+
+                <ul class="plan__features">
+                  <li><svg aria-hidden="true"><use href="#i-check" /></svg>Diseño a medida</li>
+                  <li><svg aria-hidden="true"><use href="#i-check" /></svg>1 página 100% responsive</li>
+                  <li><svg aria-hidden="true"><use href="#i-check" /></svg>Código limpio HTML · CSS · JS</li>
+                  <li><svg aria-hidden="true"><use href="#i-check" /></svg>SEO + formulario de contacto</li>
+                  <li><svg aria-hidden="true"><use href="#i-check" /></svg>Botón de WhatsApp con mensaje listo</li>
+                  <li><svg aria-hidden="true"><use href="#i-check" /></svg>Entrega en 48/72 hs</li>
+                </ul>
+
+                <div class="plan__bonus">
+                  <p class="plan__bonus-title">Incluido sin cargo</p>
+                  <ul>
+                    <li><svg aria-hidden="true"><use href="#i-chart" /></svg>Panel de datos con Google Analytics</li>
+                    <li><svg aria-hidden="true"><use href="#i-shield" /></svg>1 mes de mantenimiento gratis</li>
+                  </ul>
+                </div>
+              </div>
+
+              <button type="button" class="plan__cta" onclick="handleWhatsAppClick('Hola LanzaWebs! Me interesa la Landing Page (desde $90.000). ¿Me asesorás?')">
+                Quiero mi landing
+                <svg aria-hidden="true"><use href="#i-arrow" /></svg>
+              </button>
+            </article>
+
+            <!-- PLAN 2: PÁGINA WEB (destacado) -->
+            <article class="plan plan--featured reveal-on-scroll delay-100">
+              <span class="plan__badge">Recomendado</span>
+              <div class="plan__body">
+                <p class="plan__label">Sitio completo</p>
+                <h3 class="plan__name">Página Web</h3>
+                <p class="plan__desc">Tu sitio con identidad propia, varias secciones y listo para aparecer en Google.</p>
+
+                <div class="plan__pricing">
+                  <p class="plan__was"><s>$350.000</s><span class="plan__save">Ahorrás $170.000</span></p>
+                  <p class="plan__price"><small class="plan__from">desde</small>$180.000<small>ARS</small></p>
+                  <p class="plan__note">Pago único · Precio promocional</p>
+                </div>
+
+                <ul class="plan__features">
+                  <li><svg aria-hidden="true"><use href="#i-check" /></svg>Diseño de identidad digital: colores, tipografías y estilo propio</li>
+                  <li><svg aria-hidden="true"><use href="#i-check" /></svg>Hasta 5 secciones 100% responsive</li>
+                  <li><svg aria-hidden="true"><use href="#i-check" /></svg>SEO on-page + optimización de carga</li>
+                  <li><svg aria-hidden="true"><use href="#i-check" /></svg>Posicionamiento en Google: alta en Search Console y sitemap</li>
+                  <li><svg aria-hidden="true"><use href="#i-check" /></svg>Formularios de contacto integrados</li>
+                  <li><svg aria-hidden="true"><use href="#i-check" /></svg>Botón de WhatsApp con mensaje listo</li>
+                  <li><svg aria-hidden="true"><use href="#i-check" /></svg>Animaciones y efectos en botones y al deslizar</li>
+                  <li><svg aria-hidden="true"><use href="#i-check" /></svg>Mapa de ubicación y links a tus redes</li>
+                  <li><svg aria-hidden="true"><use href="#i-check" /></svg>Conexión segura (SSL) y política de privacidad</li>
+                  <li><svg aria-hidden="true"><use href="#i-check" /></svg>Dominio personalizado: www.tunegocio.com</li>
+                  <li><svg aria-hidden="true"><use href="#i-check" /></svg>Entrega en 48/72 hs</li>
+                </ul>
+
+                <div class="plan__bonus">
+                  <p class="plan__bonus-title">Incluido sin cargo</p>
+                  <ul>
+                    <li><svg aria-hidden="true"><use href="#i-chart" /></svg>Panel de datos con Google Analytics</li>
+                    <li><svg aria-hidden="true"><use href="#i-shield" /></svg>1 mes de mantenimiento gratis</li>
+                  </ul>
+                </div>
+
+                <p class="plan__extra"><strong>¿Necesitás más de 5 secciones?</strong> Cada sección extra suma $25.000.</p>
+              </div>
+
+              <button type="button" class="plan__cta" onclick="handleWhatsAppClick('Hola LanzaWebs! Me interesa la Página Web (desde $180.000). ¿Me asesorás?')">
+                Quiero mi página web
+                <svg aria-hidden="true"><use href="#i-arrow" /></svg>
+              </button>
+            </article>
+
+            <!-- PLAN 3: TIENDA ONLINE (Tiendanube) -->
+            <article class="plan plan--store reveal-on-scroll delay-200">
+              <div class="plan__body">
+                <p class="plan__label">Para vender</p>
+                <h3 class="plan__name">Tienda Online</h3>
+                <p class="plan__desc">Tu tienda armada sobre Tiendanube: vendés y cobrás las 24 hs, y la administrás vos desde el celular o la compu.</p>
+
+                <div class="plan__pricing">
+                  <p class="plan__price">$70.000<small>ARS</small></p>
+                  <p class="plan__note">Pago único</p>
+                </div>
+
+                <ul class="plan__features">
+                  <li><svg aria-hidden="true"><use href="#i-check" /></svg>Diseño de la tienda con tu marca: logo, colores y banners</li>
+                  <li><svg aria-hidden="true"><use href="#i-check" /></svg>Carga de hasta 10 productos con fotos, precios y variantes</li>
+                  <li><svg aria-hidden="true"><use href="#i-check" /></svg>Categorías y menú ordenados</li>
+                  <li><svg aria-hidden="true"><use href="#i-check" /></svg>Cobros configurados: Mercado Pago (tarjetas y efectivo) y transferencia</li>
+                  <li><svg aria-hidden="true"><use href="#i-check" /></svg>Envíos y retiro en el local configurados</li>
+                  <li><svg aria-hidden="true"><use href="#i-check" /></svg>Formulario de contacto y botón de WhatsApp</li>
+                  <li><svg aria-hidden="true"><use href="#i-check" /></svg>Páginas de preguntas frecuentes, cómo comprar y cambios</li>
+                  <li><svg aria-hidden="true"><use href="#i-check" /></svg>Capacitación para que la manejes vos</li>
+                </ul>
+
+                <div class="plan__bonus">
+                  <p class="plan__bonus-title">Incluido sin cargo</p>
+                  <ul>
+                    <li><svg aria-hidden="true"><use href="#i-chart" /></svg>Panel de datos con Google Analytics</li>
+                    <li><svg aria-hidden="true"><use href="#i-shield" /></svg>1 mes de mantenimiento gratis</li>
+                  </ul>
+                </div>
+
+                <p class="plan__extra"><strong>¿Más productos?</strong> Cada 10 productos extra suman $15.000. Podés arrancar con el plan gratis de Tiendanube; si elegís uno pago, se abona aparte, directo a Tiendanube.</p>
+              </div>
+
+              <button type="button" class="plan__cta" onclick="handleWhatsAppClick('Hola LanzaWebs! Me interesa la Tienda Online con Tiendanube ($70.000). ¿Me asesorás?')">
+                Quiero mi tienda
+                <svg aria-hidden="true"><use href="#i-arrow" /></svg>
+              </button>
+            </article>
+
+          </div>
+
+          <!-- Condiciones (lo que más se pregunta antes de contratar) -->
+          <div class="pricing-terms reveal-on-scroll">
+            <h3 class="pricing-terms__title">Condiciones claras</h3>
+            <ul>
+              <li><svg aria-hidden="true"><use href="#i-pay" /></svg><span><strong>Sin señas:</strong> pagás recién cuando tu proyecto está terminado y entregado.</span></li>
+              <li><svg aria-hidden="true"><use href="#i-eye" /></svg><span><strong>Aprobás antes:</strong> ves el diseño y pedís cambios antes de que salga en vivo.</span></li>
+              <li><svg aria-hidden="true"><use href="#i-clock" /></svg><span><strong>Plazos claros:</strong> la entrega corre desde que tenemos tus textos, fotos y logo.</span></li>
+              <li><svg aria-hidden="true"><use href="#i-refresh" /></svg><span><strong>Después del mes gratis:</strong> el mantenimiento es opcional; seguís solo si lo necesitás.</span></li>
+              <li><svg aria-hidden="true"><use href="#i-globe" /></svg><span><strong>Dominio:</strong> lo registramos y configuramos por vos; su costo anual se abona aparte.</span></li>
+            </ul>
+          </div>
+
+          <!-- Ayuda para elegir + trabajos a medida -->
+          <div class="pricing-help reveal-on-scroll">
+            <p><strong>¿No sabés cuál elegir?</strong> Contanos qué hacés y te recomendamos el plan justo. ¿Necesitás turnos online, textos escritos por nosotros o un sistema a medida? Te pasamos un presupuesto cerrado.</p>
+            <button type="button" class="pricing-help__cta" onclick="handleWhatsAppClick('Hola LanzaWebs! No sé qué plan me conviene, ¿me asesorás?')">
+              Pedir asesoría gratis
+              <svg aria-hidden="true"><use href="#i-arrow" /></svg>
+            </button>
+          </div>
+
+          <p class="pricing-footnote">Valores en pesos argentinos (ARS), actualizados a octubre de 2026.</p>
+        </section>
+
+        <hr class="border-white/10 my-20" />
+
+        <!-- ===================================================================== -->
+        <!-- SECCIÓN: SEGURIDAD PARA TU WEB                                        -->
+        <!-- ===================================================================== -->
+        <section id="seguridad" class="reveal-on-scroll">
+          <p class="font-body-sans text-[#8e8e93] text-sm sm:text-base font-bold mb-1.5">
+            Arquitectura segura y confiable.
+          </p>
+          <h2 class="font-heading-sans text-white text-3xl sm:text-4xl uppercase mb-6">
+            SEGURIDAD PARA TU WEB.
+          </h2>
+
+          <div class="font-body-sans text-[#8e8e93] text-[17px] sm:text-[19px] leading-[1.6] space-y-5">
+            <p>
+              En <strong class="text-white font-bold">LanzaWebs</strong> nos ocupamos de que tu sitio web cuente con seguridad desde el primer día.
+            </p>
+            <p>
+              Todas nuestras páginas web incluyen conexión segura y verificación de seguridad diaria, protegiendo los datos de cada turno o consulta que se realice. Además, blindamos tu sitio contra accesos no deseados e integramos las <strong class="text-white font-bold">Políticas de Privacidad, Avisos legales y el resguardo de datos personales necesarios</strong> para que tu negocio funcione con total respaldo, privacidad y tranquilidad.
+            </p>
+          </div>
+        </section>
+
+        <hr class="border-white/10 my-20" />
+
+        <!-- SECCIÓN: DOMINIO PERSONALIZADO -->
+        <section id="dominio" class="reveal-on-scroll">
+          <p class="font-body-sans text-[#8e8e93] text-sm sm:text-base font-bold mb-1.5">
+            Identidad digital propia.
+          </p>
+          <h2 class="font-heading-sans text-white text-3xl sm:text-4xl uppercase mb-6">
+            DOMINIO PERSONALIZADO.
+          </h2>
+
+          <p class="font-body-sans text-[#8e8e93] text-[17px] sm:text-[19px] leading-[1.6] mb-8">
+            Tu marca merece una dirección única en internet. Configuramos tu dominio oficial con el nombre de tu proyecto o negocio para que tus clientes te encuentren rápido en Google, recuerden tu dirección fácilmente y accedan desde tu Instagram con una imagen 100% profesional y propia.
+          </p>
+
+          <!-- Ejemplos visuales de dominios -->
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+            <div class="bg-[#121214] border border-white/10 rounded-2xl px-4 py-3.5 flex items-center justify-between">
+              <div class="flex items-center gap-2.5 truncate">
+                <svg class="w-4 h-4 text-emerald-400 shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                  <path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd" />
                 </svg>
+                <span class="font-body-sans text-sm text-white font-bold tracking-tight truncate">www.lanzawebs.com</span>
               </div>
+              <span class="text-[10px] font-bold text-emerald-400 bg-emerald-400/10 px-2 py-0.5 rounded-full shrink-0">Oficial</span>
+            </div>
 
-              <h3 class="font-title-serif text-white text-[26px] sm:text-[32px] font-bold leading-tight mb-5">
-                Tu comercio o tienda abierta todo el día.
-              </h3>
-
-              <p class="font-body-sans text-[#8e8e93] text-[16px] sm:text-[18px] leading-[1.6] mb-8">
-                Diseñado para comercios locales, showrooms, gastronomía y emprendimientos que quieren vender más en la zona. Mostrá tu <strong class="text-white font-bold">catálogo interactivo de productos o servicios,</strong> permití que tus clientes armen su pedido y lo <strong class="text-white font-bold">envíen listo a tu WhatsApp para coordinar pago y entrega,</strong> posicionando tu marca en Google.
-              </p>
-
-              <div class="pt-4 border-t border-white/10">
-                <span class="block text-xs font-bold text-[#8e8e93] mb-1">Crecimiento comercial</span>
-                <p class="font-heading-sans text-white text-2xl sm:text-3xl leading-tight">
-                  Catálogo online con pedidos directo al WhatsApp.
-                </p>
+            <div class="bg-[#121214] border border-white/10 rounded-2xl px-4 py-3.5 flex items-center justify-between">
+              <div class="flex items-center gap-2.5 truncate">
+                <svg class="w-4 h-4 text-emerald-400 shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                  <path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd" />
+                </svg>
+                <span class="font-body-sans text-sm text-zinc-300 font-bold tracking-tight truncate">www.tuconsultorio.com</span>
               </div>
+              <span class="text-[10px] font-bold text-zinc-400 bg-white/5 px-2 py-0.5 rounded-full shrink-0">Salud</span>
+            </div>
+
+            <div class="bg-[#121214] border border-white/10 rounded-2xl px-4 py-3.5 flex items-center justify-between">
+              <div class="flex items-center gap-2.5 truncate">
+                <svg class="w-4 h-4 text-emerald-400 shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                  <path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd" />
+                </svg>
+                <span class="font-body-sans text-sm text-zinc-300 font-bold tracking-tight truncate">www.tunegocio.com</span>
+              </div>
+              <span class="text-[10px] font-bold text-zinc-400 bg-white/5 px-2 py-0.5 rounded-full shrink-0">Comercio</span>
+            </div>
+          </div>
+        </section>
+
+        <hr class="border-white/10 my-20" />
+
+        <!-- SECCIÓN: ISLA INTERACTIVA + CARRUSEL DE SECTORES -->
+        <section id="sectores" class="reveal-on-scroll">
+          <div class="flex justify-center mb-8">
+            <div class="apple-island" role="tablist" aria-label="Seleccionar rubro">
+              <div id="islandPill" class="island-pill-bg"></div>
+              <button type="button" class="island-btn active" onclick="selectSector(0)" role="tab" aria-selected="true">
+                CONSULTORIOS
+              </button>
+              <button type="button" class="island-btn" onclick="selectSector(1)" role="tab" aria-selected="false">
+                BARBEROS
+              </button>
+              <button type="button" class="island-btn" onclick="selectSector(2)" role="tab" aria-selected="false">
+                NEGOCIOS
+              </button>
             </div>
           </div>
 
-        </div>
-      </div>
+          <div id="sectorCarousel" class="relative overflow-hidden">
+            <div id="sectorTrack" class="flex transition-transform duration-500 ease-out">
 
-      <!-- Indicadores de deslizamiento inferior -->
-      <div class="flex items-center justify-between mt-5 px-2 text-xs text-zinc-500">
-        <span>Deslizá hacia los lados o tocá la isla superior</span>
-        <div class="flex gap-2">
-          <button onclick="selectSector(0)" class="sector-dot w-2 h-2 rounded-full bg-white transition-all" aria-label="Consultorios"></button>
-          <button onclick="selectSector(1)" class="sector-dot w-2 h-2 rounded-full bg-zinc-700 transition-all" aria-label="Barberos"></button>
-          <button onclick="selectSector(2)" class="sector-dot w-2 h-2 rounded-full bg-zinc-700 transition-all" aria-label="Negocios"></button>
-        </div>
-      </div>
-    </section>
+              <!-- TARJETA 1: CONSULTORIOS -->
+              <div class="w-full shrink-0 px-1">
+                <div class="apple-feature-card">
+                  <div class="mb-6">
+                    <svg class="w-9 h-9 text-[#30d158]" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" />
+                    </svg>
+                  </div>
 
+                  <h3 class="font-display text-white text-[26px] sm:text-[32px] font-bold leading-tight mb-5">
+                    Desarrollá tu consultorio profesional en la web.
+                  </h3>
+
+                  <p class="font-body-sans text-[#8e8e93] text-[16px] sm:text-[18px] leading-[1.6] mb-8">
+                    Ideal para consultorios <strong class="text-white font-bold">odontológicos, dermatológicos, kinesiología, psicología, nutrición y medicina general.</strong> Tener presencia visible en la zona y en el link de tu Instagram permite que tus pacientes puedan <strong class="text-white font-bold">solicitar turnos online, enviar consultas directo al WhatsApp del profesional,</strong> conocer en detalle los tratamientos que realizás y ver con mapa interactivo <strong class="text-white font-bold">en qué lugares y horarios atendés.</strong>
+                  </p>
+
+                  <div class="pt-4 border-t border-white/10">
+                    <span class="block text-xs font-bold text-[#8e8e93] mb-1">Beneficio directo</span>
+                    <p class="font-heading-sans text-white text-2xl sm:text-3xl leading-tight">
+                      Turnos y consultas 24/7 directo a tu WhatsApp.
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              <!-- TARJETA 2: BARBEROS -->
+              <div class="w-full shrink-0 px-1">
+                <div class="apple-feature-card">
+                  <div class="mb-6">
+                    <svg class="w-9 h-9 text-[#ffd60a]" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M14.121 14.121L19 19m-7-7l7-7m-7 7l-2.879 2.879M12 12L9.121 9.121m0 5.758a3 3 0 10-4.243 4.243 3 3 0 004.243-4.243zm0-5.758a3 3 0 10-4.243-4.243 3 3 0 004.243 4.243z" />
+                    </svg>
+                  </div>
+
+                  <h3 class="font-display text-white text-[26px] sm:text-[32px] font-bold leading-tight mb-5">
+                    Tu barbería con agenda llena y estilo propio.
+                  </h3>
+
+                  <p class="font-body-sans text-[#8e8e93] text-[16px] sm:text-[18px] leading-[1.6] mb-8">
+                    Olvidate de perder tiempo respondiendo mensajes mientras estás cortando. Con tu propia web en tu biografía de Instagram, tus clientes pueden <strong class="text-white font-bold">reservar su turno eligiendo día, horario y barbero,</strong> mirar tu galería de cortes y trabajos realizados, <strong class="text-white font-bold">consultar precios actualizados de corte y barba</strong> y llegar directo a tu local con un solo toque.
+                  </p>
+
+                  <div class="pt-4 border-t border-white/10">
+                    <span class="block text-xs font-bold text-[#8e8e93] mb-1">Automatización total</span>
+                    <p class="font-heading-sans text-white text-2xl sm:text-3xl leading-tight">
+                      Reservas de cortes sin interrumpir tu trabajo.
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              <!-- TARJETA 3: NEGOCIOS -->
+              <div class="w-full shrink-0 px-1">
+                <div class="apple-feature-card">
+                  <div class="mb-6">
+                    <svg class="w-9 h-9 text-[#0a84ff]" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+                    </svg>
+                  </div>
+
+                  <h3 class="font-display text-white text-[26px] sm:text-[32px] font-bold leading-tight mb-5">
+                    Tu comercio o tienda abierta todo el día.
+                  </h3>
+
+                  <p class="font-body-sans text-[#8e8e93] text-[16px] sm:text-[18px] leading-[1.6] mb-8">
+                    Diseñado para comercios locales, showrooms, gastronomía y emprendimientos que quieren vender más en la zona. Mostrá tu <strong class="text-white font-bold">catálogo interactivo de productos o servicios,</strong> permití que tus clientes armen su pedido y lo <strong class="text-white font-bold">envíen listo a tu WhatsApp para coordinar pago y entrega,</strong> posicionando tu marca en Google.
+                  </p>
+
+                  <div class="pt-4 border-t border-white/10">
+                    <span class="block text-xs font-bold text-[#8e8e93] mb-1">Crecimiento comercial</span>
+                    <p class="font-heading-sans text-white text-2xl sm:text-3xl leading-tight">
+                      Catálogo online con pedidos directo al WhatsApp.
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+          <!-- Indicadores de deslizamiento inferior -->
+          <div class="flex items-center justify-between mt-5 px-2 text-xs text-zinc-500">
+            <span>Deslizá hacia los lados o tocá la isla superior</span>
+            <div class="flex gap-2">
+              <button onclick="selectSector(0)" class="sector-dot w-2 h-2 rounded-full bg-white transition-all" aria-label="Consultorios"></button>
+              <button onclick="selectSector(1)" class="sector-dot w-2 h-2 rounded-full bg-zinc-700 transition-all" aria-label="Barberos"></button>
+              <button onclick="selectSector(2)" class="sector-dot w-2 h-2 rounded-full bg-zinc-700 transition-all" aria-label="Negocios"></button>
+            </div>
+          </div>
+        </section>
+
+      </div>
+    </div>
   </main>
 
   <!-- ===================================================================== -->
@@ -932,10 +2214,10 @@
 
         <div class="relative flex items-center justify-between sm:justify-center pt-1">
           <a href="#seguridad" class="hover:text-white underline underline-offset-4 transition">
-            Terminos y Condiciones
+            Términos y Condiciones
           </a>
 
-          <a href="#" class="sm:absolute sm:right-0 inline-flex items-center gap-1.5 group select-none text-[#e5e7eb] hover:text-white transition">
+          <a href="#inicio" class="sm:absolute sm:right-0 inline-flex items-center gap-1.5 group select-none text-[#e5e7eb] hover:text-white transition">
             <div class="flex items-baseline tracking-tight">
               <span class="text-[11px] font-extrabold mr-0.5">by</span>
               <span class="text-sm font-black tracking-tight">LanzaWebs</span>
@@ -952,160 +2234,269 @@
     </div>
   </footer>
 
-  <!-- Botón Flotante de WhatsApp -->
+  <!-- Botón flotante de WhatsApp -->
   <button
-    id="waFloatingBtn"
+    type="button"
+    id="contactBadge"
+    class="contact-badge"
     onclick="handleWhatsAppClick()"
-    aria-label="Consultar por WhatsApp"
-    class="fixed bottom-5 right-5 z-50 w-14 h-14 rounded-full bg-[#25D366] text-white shadow-[0_8px_30px_rgba(37,211,102,0.45)] flex items-center justify-center hover:scale-105 active:scale-95 transition-transform"
+    aria-label="Escribinos por WhatsApp"
   >
-    <svg class="w-7 h-7 fill-current" viewBox="0 0 24 24">
-      <path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.582 2.128 2.182-.573c.978.58 1.911.928 3.145.929 3.178 0 5.767-2.587 5.768-5.766.001-3.187-2.575-5.77-5.764-5.771zm3.392 8.244c-.144.405-.837.774-1.17.824-.299.045-.677.063-1.092-.069-.252-.08-.575-.187-.988-.365-1.739-.751-2.874-2.502-2.961-2.617-.087-.116-.708-.94-.708-1.793s.448-1.273.607-1.446c.159-.173.346-.217.462-.217l.332.006c.106.005.249-.04.39.298.144.347.491 1.2.534 1.287.043.087.072.188.014.304-.058.116-.087.188-.173.289l-.26.304c-.087.086-.177.18-.076.354.101.174.449.741.964 1.201.662.591 1.221.774 1.394.86s.274.072.376-.043c.101-.116.433-.506.549-.68.116-.173.231-.145.39-.087s1.011.477 1.184.564.289.13.332.202c.045.072.045.419-.1.824zm-3.423-14.416c-6.627 0-12 5.373-12 12 0 2.126.556 4.124 1.535 5.862l-1.535 5.608 5.749-1.508c1.696.906 3.631 1.425 5.689 1.425 6.627 0 12-5.373 12-12s-5.373-12-12.438-11.387z"/>
-    </svg>
+    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413z" /></svg>
   </button>
 
   <!-- Notificación Toast -->
-  <div id="waToast" class="fixed bottom-24 right-5 z-50 bg-zinc-900/95 border border-white/15 text-white text-xs px-4 py-3 rounded-2xl shadow-2xl opacity-0 pointer-events-none transition-opacity duration-300">
+  <div id="waToast" class="fixed bottom-28 right-5 z-50 bg-zinc-900/95 border border-white/15 text-white text-xs px-4 py-3 rounded-2xl shadow-2xl opacity-0 pointer-events-none transition-opacity duration-300" role="status" aria-live="polite">
     Próximamente: botón conectado al WhatsApp oficial de LanzaWebs.
   </div>
 
   <!-- SCRIPTS INTERACTIVOS -->
   <script>
-    /* 1. Efecto de Bajada Muy Despacito para "NUESTRA FORMA DE TRABAJAR" */
+    /* =====================================================================
+       0. CONFIGURACIÓN DE WHATSAPP  ←  ¡COMPLETAR!
+       Pegá tu número en formato internacional, sin "+", espacios ni guiones.
+       Argentina: 549 + código de área sin el 0 + número sin el 15.
+       Ejemplo: '5491123456789'
+       ===================================================================== */
+    const phoneNumber = '';
+    const defaultWhatsAppMessage = 'Hola LanzaWebs! Quiero consultar por el diseño de una página web.';
+
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    let menuOpen = false;
+
+    /* 1. Scroll suave para todos los links internos (#proyectos, #beneficios, etc.) */
+    let scrollAnimId = 0;
+    ['wheel', 'touchstart'].forEach((evt) => {
+      window.addEventListener(evt, () => { scrollAnimId++; }, { passive: true });
+    });
+
+    function smoothScrollTo(target, duration) {
+      const headerOffset = 76;
+      const targetY = Math.max(0, target.getBoundingClientRect().top + window.pageYOffset - headerOffset);
+      if (reduceMotion || !duration) {
+        window.scrollTo(0, targetY);
+        return;
+      }
+      const startY = window.pageYOffset;
+      const distance = targetY - startY;
+      const myId = ++scrollAnimId;
+      let startTime = null;
+      const ease = (t) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2);
+
+      function step(now) {
+        if (myId !== scrollAnimId) return; // la persona tocó la pantalla: se cancela
+        if (startTime === null) startTime = now;
+        const progress = Math.min((now - startTime) / duration, 1);
+        window.scrollTo(0, startY + distance * ease(progress));
+        if (progress < 1) requestAnimationFrame(step);
+      }
+      requestAnimationFrame(step);
+    }
+
+    /* Efecto de bajada muy despacito para "NUESTRA FORMA DE TRABAJAR" */
     function slowScrollTo(event, targetId) {
       if (event) event.preventDefault();
       const target = document.getElementById(targetId);
-      if (!target) return;
-
-      const headerOffset = 70;
-      const targetPosition = target.getBoundingClientRect().top + window.pageYOffset - headerOffset;
-      const startPosition = window.pageYOffset;
-      const distance = targetPosition - startPosition;
-      const duration = 1850;
-      let startTime = null;
-
-      function easeInOutCubic(t) {
-        return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
-      }
-
-      function animation(currentTime) {
-        if (startTime === null) startTime = currentTime;
-        const timeElapsed = currentTime - startTime;
-        const progress = Math.min(timeElapsed / duration, 1);
-        const ease = easeInOutCubic(progress);
-
-        window.scrollTo(0, startPosition + distance * ease);
-
-        if (timeElapsed < duration) {
-          requestAnimationFrame(animation);
-        }
-      }
-
-      requestAnimationFrame(animation);
+      if (target) smoothScrollTo(target, 1850);
     }
 
-    /* 2. Nube densa de micro-partículas y fragmentos triangulares */
-    (function initHeroParticles() {
-      const canvas = document.getElementById('particlesCanvas');
-      if (!canvas) return;
-      const ctx = canvas.getContext('2d');
-      let particles = [];
-      const totalParticles = 155;
+    document.addEventListener('click', (event) => {
+      if (event.defaultPrevented) return;
+      const link = event.target.closest('a[href^="#"]');
+      if (!link) return;
+      const id = link.getAttribute('href').slice(1);
+      const target = id ? document.getElementById(id) : null;
+      if (!target) return;
+      event.preventDefault();
+      if (menuOpen) setMenu(false);
+      smoothScrollTo(target, Number(link.dataset.scrollDuration) || 1000);
+    });
 
-      function resize() {
-        const dpr = window.devicePixelRatio || 1;
-        canvas.width = canvas.offsetWidth * dpr;
-        canvas.height = canvas.offsetHeight * dpr;
-        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    /* 2. Domo (blanco → negro), tema del header y color del navegador */
+    const siteHeader = document.getElementById('siteHeader');
+    const darkZone = document.getElementById('darkZone');
+    const dome = document.getElementById('dome');
+    const themeMeta = document.querySelector('meta[name="theme-color"]');
+    let isDarkTheme = null;
+    let lastDomeRadius = -1;
+    let lastScrollY = window.pageYOffset;
+    let frameRequested = false;
+
+    function updateOnScroll() {
+      frameRequested = false;
+      const y = window.pageYOffset;
+      const vw = document.documentElement.clientWidth;
+      const vh = window.innerHeight;
+      const boundary = darkZone.getBoundingClientRect().top; // borde superior de la zona negra
+
+      // Radio del círculo: 0 cuando el borde está abajo de todo, y cubre la pantalla
+      // cuando el borde llegó al 38% superior.
+      let radius = 0;
+      if (!reduceMotion) {
+        const progress = Math.min(Math.max((vh - boundary) / (vh * 0.62), 0), 1);
+        const maxRadius = Math.hypot(vw / 2, vh * 0.38) * 1.06 + 4;
+        radius = maxRadius * Math.pow(progress, 1.35);
+      }
+      if (Math.abs(radius - lastDomeRadius) > 0.25) {
+        lastDomeRadius = radius;
+        const clip = 'circle(' + radius.toFixed(1) + 'px at 50% 100%)';
+        dome.style.webkitClipPath = clip;
+        dome.style.clipPath = clip;
       }
 
-      function createParticles() {
-        const w = canvas.offsetWidth;
-        const h = canvas.offsetHeight;
-        particles = [];
-
-        for (let i = 0; i < totalParticles; i++) {
-          const spreadX = (Math.random() + Math.random() - 1) * (w * 0.52);
-          const spreadY = (Math.random() + Math.random() - 1) * (h * 0.44);
-
-          const isTinySpec = Math.random() < 0.58;
-          particles.push({
-            x: w / 2 + spreadX,
-            y: h / 2 + spreadY,
-            size: isTinySpec ? (Math.random() * 1.4 + 0.5) : (Math.random() * 3.2 + 1.4),
-            isTiny: isTinySpec,
-            speedX: (Math.random() - 0.5) * 0.22,
-            speedY: (Math.random() - 0.5) * 0.18,
-            angle: Math.random() * Math.PI * 2,
-            spin: (Math.random() - 0.5) * 0.015,
-            tilt: Math.random() * Math.PI,
-            tiltSpeed: (Math.random() - 0.5) * 0.02,
-            alpha: isTinySpec ? (Math.random() * 0.55 + 0.15) : (Math.random() * 0.75 + 0.2)
-          });
-        }
+      // ¿El negro ya tapa el logo del header? → header en modo oscuro
+      const logoX = 28;
+      const logoY = 32;
+      const dark = menuOpen || boundary <= logoY ||
+        (radius > 0 && Math.hypot(vw / 2 - logoX, boundary - logoY) <= radius);
+      if (dark !== isDarkTheme) {
+        isDarkTheme = dark;
+        siteHeader.classList.toggle('is-dark', dark);
+        document.documentElement.classList.toggle('is-dark', dark);
+        if (themeMeta) themeMeta.setAttribute('content', dark ? '#000000' : '#ffffff');
       }
 
-      window.addEventListener('resize', () => {
-        resize();
-        createParticles();
-      });
-
-      resize();
-      createParticles();
-
-      function animate() {
-        const w = canvas.offsetWidth;
-        const h = canvas.offsetHeight;
-        ctx.clearRect(0, 0, w, h);
-
-        for (let i = 0; i < particles.length; i++) {
-          const p = particles[i];
-          p.x += p.speedX;
-          p.y += p.speedY;
-          p.angle += p.spin;
-          p.tilt += p.tiltSpeed;
-
-          if (p.x < -8) p.x = w + 8;
-          if (p.x > w + 8) p.x = -8;
-          if (p.y < -8) p.y = h + 8;
-          if (p.y > h + 8) p.y = -8;
-
-          ctx.save();
-          ctx.translate(p.x, p.y);
-          ctx.rotate(p.angle);
-
-          if (p.isTiny) {
-            ctx.fillStyle = `rgba(235, 245, 240, ${p.alpha})`;
-            ctx.fillRect(-p.size / 2, -p.size / 2, p.size, p.size);
-          } else {
-            const scaleY = Math.cos(p.tilt) * 0.7 + 0.3;
-            ctx.scale(1, scaleY);
-            ctx.beginPath();
-            ctx.moveTo(0, -p.size);
-            ctx.lineTo(p.size * 0.86, p.size * 0.75);
-            ctx.lineTo(-p.size * 0.86, p.size * 0.75);
-            ctx.closePath();
-            ctx.fillStyle = `rgba(228, 236, 232, ${p.alpha})`;
-            ctx.fill();
-          }
-
-          ctx.restore();
-        }
-
-        requestAnimationFrame(animate);
+      // Header: fondo esmerilado al bajar un poco; se esconde al bajar y vuelve al subir
+      siteHeader.classList.toggle('is-scrolled', y > 8);
+      const delta = y - lastScrollY;
+      if (y < 120 || menuOpen) {
+        siteHeader.classList.remove('is-hidden');
+        lastScrollY = y;
+      } else if (Math.abs(delta) > 8) {
+        siteHeader.classList.toggle('is-hidden', delta > 0);
+        lastScrollY = y;
       }
-      animate();
+    }
+
+    function requestUpdate() {
+      if (!frameRequested) {
+        frameRequested = true;
+        requestAnimationFrame(updateOnScroll);
+      }
+    }
+
+    window.addEventListener('scroll', requestUpdate, { passive: true });
+    window.addEventListener('resize', requestUpdate);
+    siteHeader.addEventListener('focusin', () => siteHeader.classList.remove('is-hidden'));
+    updateOnScroll();
+
+    /* 3. Menú del celular */
+    const menuToggle = document.getElementById('menuToggle');
+    const mobileMenu = document.getElementById('mobileMenu');
+
+    function setMenu(open, fromKeyboard) {
+      menuOpen = open;
+      mobileMenu.classList.toggle('is-open', open);
+      mobileMenu.setAttribute('aria-hidden', String(!open));
+      mobileMenu.inert = !open;
+      menuToggle.setAttribute('aria-expanded', String(open));
+      menuToggle.setAttribute('aria-label', open ? 'Cerrar menú' : 'Abrir menú');
+      document.documentElement.classList.toggle('menu-open', open);
+      if (open && fromKeyboard) {
+        // Solo con teclado: el foco pasa al primer link (accesibilidad)
+        const firstLink = mobileMenu.querySelector('a');
+        if (firstLink) firstLink.focus({ preventScroll: true });
+      } else if (!open && mobileMenu.contains(document.activeElement)) {
+        menuToggle.focus({ preventScroll: true });
+      }
+      updateOnScroll();
+    }
+
+    // event.detail === 0 → se activó con teclado (Enter/Espacio), no con un toque
+    menuToggle.addEventListener('click', (event) => setMenu(!menuOpen, event.detail === 0));
+    document.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape' && menuOpen) setMenu(false);
+    });
+    window.matchMedia('(min-width: 900px)').addEventListener('change', (event) => {
+      if (event.matches && menuOpen) setMenu(false);
+    });
+
+    /* 5. Texto rotativo "LO QUE HACEMOS" */
+    (function initRotator() {
+      const items = Array.from(document.querySelectorAll('#servicesRotator .rot-item'));
+      if (items.length < 2) return;
+      let index = 0;
+      let timer = null;
+      let heroVisible = true;
+
+      function next() {
+        const current = items[index];
+        index = (index + 1) % items.length;
+        current.classList.remove('is-active');
+        current.classList.add('is-leaving');
+        setTimeout(() => current.classList.remove('is-leaving'), 650);
+        items[index].classList.add('is-active');
+      }
+      function sync() {
+        const shouldRun = heroVisible && !document.hidden;
+        if (shouldRun && !timer) timer = setInterval(next, 2600);
+        if (!shouldRun && timer) { clearInterval(timer); timer = null; }
+      }
+
+      if ('IntersectionObserver' in window) {
+        new IntersectionObserver((entries) => {
+          heroVisible = entries[0].isIntersecting;
+          sync();
+        }).observe(document.getElementById('servicesRotator'));
+      }
+      document.addEventListener('visibilitychange', sync);
+      sync();
     })();
 
-    /* 3. Deslizador de Proyectos */
+    /* 6. Marquesina de clientes: repite los logos para que el loop no tenga cortes */
+    (function initMarquee() {
+      const marquee = document.getElementById('logoMarquee');
+      if (!marquee) return;
+      const track = marquee.querySelector('.logo-track');
+      const group = track.querySelector('.logo-group');
+      const originals = Array.from(group.children).map((li) => li.cloneNode(true));
+      let builtWidth = 0;
+
+      function build() {
+        track.querySelectorAll('.logo-group').forEach((g, i) => { if (i > 0) g.remove(); });
+        group.replaceChildren(...originals.map((li) => li.cloneNode(true)));
+
+        let guard = 0;
+        while (group.scrollWidth < marquee.clientWidth && guard++ < 12) {
+          originals.forEach((li) => {
+            const copy = li.cloneNode(true);
+            copy.setAttribute('aria-hidden', 'true');
+            group.appendChild(copy);
+          });
+        }
+
+        const clone = group.cloneNode(true);
+        clone.setAttribute('aria-hidden', 'true');
+        clone.removeAttribute('aria-label');
+        track.appendChild(clone);
+
+        const pixelsPerSecond = 42;
+        track.style.setProperty('--marquee-duration', (group.scrollWidth / pixelsPerSecond).toFixed(1) + 's');
+        builtWidth = marquee.clientWidth;
+      }
+
+      build();
+      if (document.fonts && document.fonts.ready) document.fonts.ready.then(build);
+      window.addEventListener('load', build);
+
+      let resizeTimer;
+      window.addEventListener('resize', () => {
+        clearTimeout(resizeTimer);
+        resizeTimer = setTimeout(() => {
+          if (Math.abs(marquee.clientWidth - builtWidth) > 40) build();
+        }, 200);
+      });
+    })();
+
+    /* 7. Deslizador de Proyectos */
     let activeHeroIndex = 0;
     const heroCards = document.querySelectorAll('#heroSliderStage .slide-card');
     const heroDots = document.querySelectorAll('.hero-dot');
     const activeProjectTitle = document.getElementById('activeProjectTitle');
 
     const projectsMeta = [
-      { title: '1. EPFAR | Pagina Oficial' },
-      { title: '2. Carla Portillo Psicologa' },
+      { title: '1. EPFAR | Página oficial' },
+      { title: '2. Carla Portillo | Psicóloga' },
       { title: '3. En proceso…' }
     ];
 
@@ -1146,11 +2537,11 @@
 
     const heroStage = document.getElementById('heroSliderStage');
     let heroStartX = 0;
-    heroStage.addEventListener('touchstart', e => {
+    heroStage.addEventListener('touchstart', (e) => {
       heroStartX = e.touches[0].clientX;
     }, { passive: true });
 
-    heroStage.addEventListener('touchend', e => {
+    heroStage.addEventListener('touchend', (e) => {
       const diff = e.changedTouches[0].clientX - heroStartX;
       if (Math.abs(diff) > 40) {
         if (diff < 0) selectHeroSlide(activeHeroIndex + 1);
@@ -1158,28 +2549,17 @@
       }
     }, { passive: true });
 
-    /* 4. Acordeón de PREGUNTAS y Panel de RANGOS DE INVERSIÓN */
+    /* 8. Acordeón de PREGUNTAS */
     function toggleFaq(button) {
       const item = button.closest('.faq-item');
       const isOpen = item.classList.contains('open');
-      document.querySelectorAll('.faq-item').forEach(el => el.classList.remove('open'));
+      document.querySelectorAll('.faq-item').forEach((el) => el.classList.remove('open'));
       if (!isOpen) {
         item.classList.add('open');
       }
     }
 
-    function toggleRangosPanel() {
-      const panel = document.getElementById('rangosDetalle');
-      if (!panel) return;
-      panel.classList.toggle('hidden');
-    }
-
-    function openRangosPanel() {
-      const panel = document.getElementById('rangosDetalle');
-      if (panel) panel.classList.remove('hidden');
-    }
-
-    /* 5. Isla Interactiva + Carrusel de Sectores */
+    /* 9. Isla Interactiva + Carrusel de Sectores */
     let activeSectorIndex = 0;
     const islandPill = document.getElementById('islandPill');
     const islandBtns = document.querySelectorAll('.island-btn');
@@ -1205,11 +2585,11 @@
 
     const sectorCarousel = document.getElementById('sectorCarousel');
     let sectorStartX = 0;
-    sectorCarousel.addEventListener('touchstart', e => {
+    sectorCarousel.addEventListener('touchstart', (e) => {
       sectorStartX = e.touches[0].clientX;
     }, { passive: true });
 
-    sectorCarousel.addEventListener('touchend', e => {
+    sectorCarousel.addEventListener('touchend', (e) => {
       const diff = e.changedTouches[0].clientX - sectorStartX;
       if (Math.abs(diff) > 45) {
         if (diff < 0 && activeSectorIndex < 2) selectSector(activeSectorIndex + 1);
@@ -1217,34 +2597,40 @@
       }
     }, { passive: true });
 
-    /* 6. Animación Scroll Reveal Maximizada */
+    /* 10. Animación Scroll Reveal Maximizada */
     const revealElements = document.querySelectorAll('.reveal-on-scroll');
-    const revealObserver = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('is-visible');
-        }
+    if ('IntersectionObserver' in window) {
+      const revealObserver = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('is-visible');
+            revealObserver.unobserve(entry.target);
+          }
+        });
+      }, {
+        threshold: 0.12,
+        rootMargin: '0px 0px -35px 0px'
       });
-    }, {
-      threshold: 0.12,
-      rootMargin: '0px 0px -35px 0px'
-    });
+      revealElements.forEach((el) => revealObserver.observe(el));
+    } else {
+      revealElements.forEach((el) => el.classList.add('is-visible'));
+    }
 
-    revealElements.forEach(el => revealObserver.observe(el));
-
-    /* 7. Botón de WhatsApp */
-    const phoneNumber = '';
-    function handleWhatsAppClick() {
-      if (phoneNumber.trim() !== '') {
-        const msg = encodeURIComponent('Hola LanzaWebs! Quiero consultar por el diseño de una página web.');
-        window.open(`https://wa.me/${phoneNumber}?text=${msg}`, '_blank');
-      } else {
-        const toast = document.getElementById('waToast');
-        toast.style.opacity = '1';
-        setTimeout(() => {
-          toast.style.opacity = '0';
-        }, 2600);
+    /* 11. Botones de WhatsApp (cada botón puede mandar su propio mensaje) */
+    let toastTimer;
+    function handleWhatsAppClick(message) {
+      const text = typeof message === 'string' && message.trim() ? message : defaultWhatsAppMessage;
+      const number = phoneNumber.replace(/\D/g, '');
+      if (number) {
+        window.open(`https://wa.me/${number}?text=${encodeURIComponent(text)}`, '_blank', 'noopener');
+        return;
       }
+      const toast = document.getElementById('waToast');
+      toast.style.opacity = '1';
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => {
+        toast.style.opacity = '0';
+      }, 2600);
     }
   </script>
 </body>
