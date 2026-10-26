@@ -1510,7 +1510,7 @@
               </a>
               <div class="slide-card-img-wrapper">
                 <img
-                  src="FOTO EPFAR.jpg"
+                  src="foto-epfar.jpg"
                   onerror="projectImgFallback(this)"
                   alt="EPFAR | Página oficial"
                   loading="lazy"
@@ -1520,9 +1520,9 @@
             </div>
 
             <!-- PROYECTO 2: Carla Portillo Psicóloga -->
-            <div class="slide-card pos-right" data-index="1" onclick="handleCardClick(1, 'https://carlaportillo.netlify.app/')">
+            <div class="slide-card pos-right" data-index="1" onclick="handleCardClick(1, 'https://carlaportilloprueba.netlify.app/')">
               <a
-                href="https://carlaportillo.netlify.app/"
+                href="https://carlaportilloprueba.netlify.app/"
                 target="_blank"
                 rel="noopener noreferrer"
                 onclick="event.stopPropagation()"
@@ -1541,21 +1541,25 @@
               </div>
             </div>
 
-            <!-- PROYECTO 3: En proceso... -->
-            <div class="slide-card pos-left" data-index="2" onclick="handleCardClick(2, '')">
-              <div class="w-full bg-white text-black font-heading-sans text-xs tracking-widest uppercase py-3.5 px-4 flex items-center justify-center shrink-0 border-b border-black/10">
-                EN PROCESO…
-              </div>
-              <div class="slide-card-img-wrapper flex flex-col items-center justify-center p-6 text-center bg-gradient-to-b from-[#141418] to-[#09090b]">
-                <div class="w-12 h-12 rounded-full border border-white/15 bg-white/5 flex items-center justify-center mb-4">
-                  <span class="w-2.5 h-2.5 rounded-full bg-amber-400 animate-pulse"></span>
-                </div>
-                <p class="font-display text-white text-2xl font-bold tracking-tight mb-2">
-                  En proceso…
-                </p>
-                <p class="font-body-sans text-[#8e8e93] text-xs leading-relaxed max-w-[180px]">
-                  Próximo desarrollo web de LanzaWebs en preparación.
-                </p>
+            <!-- PROYECTO 3: Cotizador Web para Metalúrgica de General Villegas -->
+            <div class="slide-card pos-left" data-index="2" onclick="handleCardClick(2, 'https://metalurgic-glitch.github.io/galpones/')">
+              <a
+                href="https://metalurgic-glitch.github.io/galpones/"
+                target="_blank"
+                rel="noopener noreferrer"
+                onclick="event.stopPropagation()"
+                class="w-full bg-white text-black font-heading-sans text-xs tracking-widest uppercase py-3.5 px-4 flex items-center justify-center hover:bg-zinc-200 transition shrink-0 border-b border-black/10"
+              >
+                VER PÁGINA
+              </a>
+              <div class="slide-card-img-wrapper">
+                <img
+                  src="foto-cotizador-melo.jpg"
+                  onerror="projectImgFallback(this)"
+                  alt="Cotizador Web para Metalúrgica de General Villegas"
+                  loading="lazy"
+                  decoding="async"
+                />
               </div>
             </div>
 
@@ -1563,7 +1567,7 @@
 
           <!-- Nombre del proyecto e indicadores -->
           <div class="max-w-xs mx-auto mt-5 flex items-center justify-between px-2">
-            <span id="activeProjectTitle" class="text-xs sm:text-sm font-bold text-white tracking-wide uppercase">
+            <span id="activeProjectTitle" class="flex-1 pr-3 leading-snug text-xs sm:text-sm font-bold text-white tracking-wide uppercase">
               1. EPFAR | Página oficial
             </span>
             <div class="flex items-center gap-2">
@@ -2497,7 +2501,7 @@
     const projectsMeta = [
       { title: '1. EPFAR | Página oficial' },
       { title: '2. Carla Portillo | Psicóloga' },
-      { title: '3. En proceso…' }
+      { title: '3. Cotizador Web para Metalúrgica de General Villegas' }
     ];
 
     function handleCardClick(index, url) {
