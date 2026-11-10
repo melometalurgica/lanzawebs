@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -862,12 +863,16 @@
       gap: 26px;
     }
 
+    /* En compu: las 3 webs en una fila y la tienda sola abajo, centrada
+       (grilla de 6 columnas: cada tarjeta ocupa 2) */
     @media (min-width: 1024px) {
       .plans {
-        grid-template-columns: repeat(3, minmax(0, 1fr));
-        gap: 14px;
+        grid-template-columns: repeat(6, minmax(0, 1fr));
+        gap: 22px 14px;
         align-items: stretch;
       }
+      .plan { grid-column: span 2; }
+      .plan--store { grid-column: 3 / span 2; }
     }
 
     .plan {
@@ -883,6 +888,7 @@
     }
 
     .plan--store { --plan-accent: #38bdf8; }
+    .plan--corp { --plan-accent: #fb923c; }
 
     /* Plan destacado: tarjeta blanca */
     .plan--featured {
@@ -1768,7 +1774,7 @@
               </button>
               <div class="faq-answer">
                 <p class="font-body-sans text-[#9ca3af] text-[15px] sm:text-[16px] leading-relaxed">
-                  Una landing page arranca en $90.000, una página web completa en $180.000 (precio promocional) y una tienda online con Tiendanube sale $70.000. Más abajo tenés todo lo que incluye cada plan.
+                  Los sitios y landing pages salen $31.000 por mes, las webs institucionales $44.000 por mes y las corporativas $49.900 por mes. La tienda online con Tiendanube es un pago único de $70.000. Más abajo tenés todo lo que incluye cada plan.
                   <a href="#precios" class="text-[#ffd60a] font-bold uppercase tracking-wider ml-1 hover:underline">
                     VER PLANES
                   </a>
@@ -1864,16 +1870,16 @@
 
           <div class="plans">
 
-            <!-- PLAN 1: LANDING PAGE -->
+            <!-- PLAN 1: SITIOS Y LANDING PAGE -->
             <article class="plan reveal-on-scroll">
               <div class="plan__body">
                 <p class="plan__label">Para arrancar</p>
-                <h3 class="plan__name">Landing Page</h3>
+                <h3 class="plan__name">Sitios y Landing Page</h3>
                 <p class="plan__desc">Una sola página que presenta lo que hacés y lleva directo a tu WhatsApp. Ideal para profesionales y emprendedores.</p>
 
                 <div class="plan__pricing">
-                  <p class="plan__price"><small class="plan__from">desde</small>$90.000<small>ARS</small></p>
-                  <p class="plan__note">Pago único</p>
+                  <p class="plan__price">$31.000<small>ARS/mes</small></p>
+                  <p class="plan__note">Abono mensual</p>
                 </div>
 
                 <ul class="plan__features">
@@ -1894,24 +1900,23 @@
                 </div>
               </div>
 
-              <button type="button" class="plan__cta" onclick="handleWhatsAppClick('Hola LanzaWebs! Me interesa la Landing Page (desde $90.000). ¿Me asesorás?')">
+              <button type="button" class="plan__cta" onclick="handleWhatsAppClick('Hola LanzaWebs! Me interesa el plan Sitios y Landing Page ($31.000/mes). ¿Me asesorás?')">
                 Quiero mi landing
                 <svg aria-hidden="true"><use href="#i-arrow" /></svg>
               </button>
             </article>
 
-            <!-- PLAN 2: PÁGINA WEB (destacado) -->
+            <!-- PLAN 2: WEBS INSTITUCIONALES (destacado) -->
             <article class="plan plan--featured reveal-on-scroll delay-100">
               <span class="plan__badge">Recomendado</span>
               <div class="plan__body">
                 <p class="plan__label">Sitio completo</p>
-                <h3 class="plan__name">Página Web</h3>
+                <h3 class="plan__name">Webs Institucionales</h3>
                 <p class="plan__desc">Tu sitio con identidad propia, varias secciones y listo para aparecer en Google.</p>
 
                 <div class="plan__pricing">
-                  <p class="plan__was"><s>$350.000</s><span class="plan__save">Ahorrás $170.000</span></p>
-                  <p class="plan__price"><small class="plan__from">desde</small>$180.000<small>ARS</small></p>
-                  <p class="plan__note">Pago único · Precio promocional</p>
+                  <p class="plan__price">$44.000<small>ARS/mes</small></p>
+                  <p class="plan__note">Abono mensual</p>
                 </div>
 
                 <ul class="plan__features">
@@ -1939,13 +1944,51 @@
                 <p class="plan__extra"><strong>¿Necesitás más de 5 secciones?</strong> Cada sección extra suma $25.000.</p>
               </div>
 
-              <button type="button" class="plan__cta" onclick="handleWhatsAppClick('Hola LanzaWebs! Me interesa la Página Web (desde $180.000). ¿Me asesorás?')">
-                Quiero mi página web
+              <button type="button" class="plan__cta" onclick="handleWhatsAppClick('Hola LanzaWebs! Me interesa el plan Webs Institucionales ($44.000/mes). ¿Me asesorás?')">
+                Quiero mi web institucional
                 <svg aria-hidden="true"><use href="#i-arrow" /></svg>
               </button>
             </article>
 
-            <!-- PLAN 3: TIENDA ONLINE (Tiendanube) -->
+            <!-- PLAN 3: WEBS CORPORATIVAS -->
+            <article class="plan plan--corp reveal-on-scroll delay-200">
+              <div class="plan__body">
+                <p class="plan__label">Para empresas</p>
+                <h3 class="plan__name">Webs Corporativas</h3>
+                <p class="plan__desc">Para empresas que necesitan más: funciones avanzadas y un panel para actualizar el sitio por su cuenta.</p>
+
+                <div class="plan__pricing">
+                  <p class="plan__price">$49.900<small>ARS/mes</small></p>
+                  <p class="plan__note">Abono mensual</p>
+                </div>
+
+                <ul class="plan__features">
+                  <li><svg aria-hidden="true"><use href="#i-check" /></svg>Todo lo de Webs Institucionales</li>
+                  <li><svg aria-hidden="true"><use href="#i-check" /></svg>Panel para editar textos, fotos y precios sin tocar código</li>
+                  <li><svg aria-hidden="true"><use href="#i-check" /></svg>Sitio en 2 idiomas</li>
+                  <li><svg aria-hidden="true"><use href="#i-check" /></svg>Formularios avanzados o de varios pasos</li>
+                  <li><svg aria-hidden="true"><use href="#i-check" /></svg>Animaciones e interacciones avanzadas</li>
+                  <li><svg aria-hidden="true"><use href="#i-check" /></svg>Sistema de diseño y guía de estilo de tu marca</li>
+                </ul>
+
+                <div class="plan__bonus">
+                  <p class="plan__bonus-title">Incluido sin cargo</p>
+                  <ul>
+                    <li><svg aria-hidden="true"><use href="#i-chart" /></svg>Panel de datos con Google Analytics</li>
+                    <li><svg aria-hidden="true"><use href="#i-shield" /></svg>1 mes de mantenimiento gratis</li>
+                  </ul>
+                </div>
+              </div>
+
+              <button type="button" class="plan__cta" onclick="handleWhatsAppClick('Hola LanzaWebs! Me interesa el plan Webs Corporativas ($49.900/mes). ¿Me asesorás?')">
+                Quiero mi web corporativa
+                <svg aria-hidden="true"><use href="#i-arrow" /></svg>
+              </button>
+            </article>
+
+            <!-- PLAN 4: TIENDA ONLINE (Tiendanube) -->
+            <!-- En compu queda sola en la segunda fila, centrada debajo de las 3 webs -->
+            <!-- (ver .plan--store en el CSS de PRECIOS) -->
             <article class="plan plan--store reveal-on-scroll delay-200">
               <div class="plan__body">
                 <p class="plan__label">Para vender</p>
@@ -2008,7 +2051,7 @@
             </button>
           </div>
 
-          <p class="pricing-footnote">Valores en pesos argentinos (ARS), actualizados a octubre de 2026.</p>
+          <p class="pricing-footnote">Valores en pesos argentinos (ARS), actualizados a noviembre de 2026.</p>
         </section>
 
         <hr class="border-white/10 my-20" />
